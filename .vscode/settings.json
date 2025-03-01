@@ -1,0 +1,12 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/yamilet/workspace/lac/install/hello_august/lib/python3.12/site-packages",
+        "/home/yamilet/workspace/lac/install/air_cleaning_pkg/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/yamilet/workspace/lac/install/hello_august/lib/python3.12/site-packages",
+        "/home/yamilet/workspace/lac/install/air_cleaning_pkg/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ]
+}
