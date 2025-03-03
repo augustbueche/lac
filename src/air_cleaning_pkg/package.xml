@@ -20,6 +20,8 @@
     <executables>
         <executable>publisher</executable>
         <executable>pm_sensor_publisher_node</executable>
+        <executable>subscriber</executable>
+        <executable>pm_sensor_subscriber_node</executable>
     </executables>
   </export>
 </package>
