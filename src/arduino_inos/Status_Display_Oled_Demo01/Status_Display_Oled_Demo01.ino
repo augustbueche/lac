@@ -18,7 +18,7 @@ int frameIndex = 0;
 
 void setup() {
     Serial.begin(115200);
-    Wire.begin(21, 19);  
+    Wire.begin(22, 23);  //  SDA,SCL
 
     // Initialize OLED
     if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -55,4 +55,3 @@ void loop() {
 
     delay(3000); // Change frame every second
 }
- 

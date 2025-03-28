@@ -1,3 +1,4 @@
+// If boot mode error - change encoder pin from D2
 // ESP32 Pin Locations - Motors 1 and 2
 int motor1Pin1 = 33; 
 int motor1Pin2 = 32; 

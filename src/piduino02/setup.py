@@ -18,6 +18,7 @@ setup(
             'motortest = piduino02.motortest:main',
             'encoderwatch = piduino02.encoderwatch:main',
             'serial_publisher = piduino02.serial_publisher:main',
+             'oled_display = piduino02.oled_display:main',
         ],
     },
 )
