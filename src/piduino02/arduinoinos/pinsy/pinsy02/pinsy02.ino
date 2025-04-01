@@ -24,7 +24,7 @@ int leftMotorDirection = 1;  // 1 for forward, -1 for backward
 int rightMotorDirection = 1;
 
 // PWM speed
-int speed = 200;
+int speed = 300;
 
 // Timer for non-blocking serial output
 unsigned long previousMillis = 0;

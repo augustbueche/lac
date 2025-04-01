@@ -14,7 +14,7 @@ volatile long leftEncoderCount = 0;
 volatile long rightEncoderCount = 0;
 
 // Motor speed (base speed for calibration)
-int baseSpeed = 300;
+int baseSpeed = 460;
 
 // Correction factor for the right motor
 float correctionFactor = 0.91;  
