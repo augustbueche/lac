@@ -14,7 +14,7 @@ class RobotController(Node):
         self.subscription  # prevent unused variable warning
 
         # Initialize serial communication with Arduino
-        self.ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)  # Adjust the port and baud rate as needed
+        self.ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)  # Adjust the port and baud rate as needed
 
     def ultrasonic_callback(self, msg):
         data = msg.data
