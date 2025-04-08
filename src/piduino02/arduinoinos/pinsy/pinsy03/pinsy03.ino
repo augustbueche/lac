@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include <MPU6050_tockn.h>
-
+ 
 // Teensy 4.1 Pin Locations - Motors 1 and 2
 int motor1Pin1 = 2;
 int motor1Pin2 = 3;
@@ -70,8 +70,8 @@ void setup() {
     // Start Serial communication
     Serial.begin(115200);
 
-    // Initialize I2C on designated pins and MPU6050
-    Wire.begin(mpuSdaPin, mpuSclPin);
+    // Initialize I2C and MPU6050
+    Wire.begin(); // No arguments needed for Teensy
     mpu6050.begin();
     mpu6050.calcGyroOffsets(true);
 }
