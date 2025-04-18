@@ -7,7 +7,7 @@ import serial
 class SerialPublisher(Node):
     def __init__(self):
         super().__init__('serial_publisher')
-        self.ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)  # Adjust the port and baud rate as needed
+        self.ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
         self.ultrasonic_publisher = self.create_publisher(String, 'ultrasonic_data', 10)
         self.encoder_publisher = self.create_publisher(String, 'encoder_data', 10)
         self.mpu_publisher = self.create_publisher(String, 'mpu_data', 10)
@@ -18,8 +18,8 @@ class SerialPublisher(Node):
         self.last_left_encoder = 0
         self.last_right_encoder = 0
 
-        # Distance per tick (calculated from calibration test)
-        self.distance_per_tick = 0.01128  # meters per tick
+        # Distance per tick (meters)
+        self.distance_per_tick = 0.01128
 
         # Track total distance
         self.total_left_distance = 0.0
@@ -28,75 +28,65 @@ class SerialPublisher(Node):
     def timer_callback(self):
         if self.ser.in_waiting > 0:
             line = self.ser.readline().decode('utf-8').strip()
+            self.get_logger().info(f"Raw serial data: {line}")
             try:
-                # Parse the combined sensor data
+                parts = line.split(',')
+
+                # Publish ultrasonic data
                 if line.startswith('A:'):
-                    # Publish ultrasonic data
                     self.ultrasonic_publisher.publish(String(data=line))
                     self.get_logger().info(f'Publishing ultrasonic data: {line}')
 
-                    # Extract encoder values
-                    parts = line.split(',')
-                    left_encoder_str = [part for part in parts if 'Left Encoder' in part][0]
-                    right_encoder_str = [part for part in parts if 'Right Encoder' in part][0]
+                # Extract and publish encoder data
+                left_str = next((p for p in parts if 'Left Encoder' in p), None)
+                right_str = next((p for p in parts if 'Right Encoder' in p), None)
+                if left_str and right_str:
+                    left = int(left_str.split(':')[1].strip())
+                    right = int(right_str.split(':')[1].strip())
 
-                    left_value = int(left_encoder_str.split(':')[1].strip())
-                    right_value = int(right_encoder_str.split(':')[1].strip())
+                    delta_left = left - self.last_left_encoder
+                    delta_right = right - self.last_right_encoder
+                    self.last_left_encoder = left
+                    self.last_right_encoder = right
 
-                    # Calculate deltas
-                    delta_left = left_value - self.last_left_encoder
-                    delta_right = right_value - self.last_right_encoder
+                    left_dist = delta_left * self.distance_per_tick
+                    right_dist = delta_right * self.distance_per_tick
+                    self.total_left_distance += left_dist
+                    self.total_right_distance += right_dist
 
-                    # Update previous values
-                    self.last_left_encoder = left_value
-                    self.last_right_encoder = right_value
-
-                    # Calculate distances
-                    left_distance = delta_left * self.distance_per_tick
-                    right_distance = delta_right * self.distance_per_tick
-
-                    # Update total distances
-                    self.total_left_distance += left_distance
-                    self.total_right_distance += right_distance
-
-                    # Publish encoder data with distances
                     encoder_data = (
-                        f"Left Steps: {left_value}, Right Steps: {right_value}, "
+                        f"Left Steps: {left}, Right Steps: {right}, "
                         f"Left Distance: {self.total_left_distance:.3f} m, "
                         f"Right Distance: {self.total_right_distance:.3f} m"
                     )
                     self.encoder_publisher.publish(String(data=encoder_data))
                     self.get_logger().info(f'Publishing encoder data: {encoder_data}')
 
-                    # Extract MPU6050 data
-                    mpu_data = {
-                        "AccX": None,
-                        "AccY": None,
-                        "AccZ": None,
-                        "GyroX": None,
-                        "GyroY": None,
-                        "GyroZ": None
-                    }
-                    for key in mpu_data.keys():
-                        for part in parts:
-                            if key in part:
-                                mpu_data[key] = float(part.split(':')[1].strip())
+                # Extract and publish MPU6050 data
+                mpu_values = {}
+                for part in parts:
+                    if any(k in part for k in ['AccX','AccY','AccZ','GyroX','GyroY','GyroZ']):
+                        label, val = part.split(':')
+                        key = label.replace('MPU ', '').strip()
+                        mpu_values[key] = float(val.strip())
 
+                if len(mpu_values) == 6:
                     mpu_data_str = (
-                        f"AccX: {mpu_data['AccX']}, AccY: {mpu_data['AccY']}, AccZ: {mpu_data['AccZ']}, "
-                        f"GyroX: {mpu_data['GyroX']}, GyroY: {mpu_data['GyroY']}, GyroZ: {mpu_data['GyroZ']}"
+                        f"AccX: {mpu_values['AccX']}, AccY: {mpu_values['AccY']}, AccZ: {mpu_values['AccZ']}, "
+                        f"GyroX: {mpu_values['GyroX']}, GyroY: {mpu_values['GyroY']}, GyroZ: {mpu_values['GyroZ']}"
                     )
                     self.mpu_publisher.publish(String(data=mpu_data_str))
                     self.get_logger().info(f'Publishing MPU6050 data: {mpu_data_str}')
 
-                    # Extract compass data
-                    compass_str = [part for part in parts if 'Compass' in part][0]
-                    compass_heading = float(compass_str.split(':')[1].strip())
-                    compass_data = f"Heading: {compass_heading} degrees"
+                # Extract and publish compass data
+                compass_str = next((p for p in parts if 'Compass' in p), None)
+                if compass_str:
+                    heading = float(compass_str.split(':')[1].strip())
+                    compass_data = f"Heading: {heading} degrees"
                     self.compass_publisher.publish(String(data=compass_data))
                     self.get_logger().info(f'Publishing compass data: {compass_data}')
 
-            except (IndexError, ValueError) as e:
+            except Exception as e:
                 self.get_logger().error(f"Error parsing data: {line} - {e}")
 
 
