@@ -100,3 +100,10 @@ hardware_interface::return_type DiffBotSystem::write(
 }
 
 }  // namespace diffbot_hardware
+
+#include <pluginlib/class_list_macros.hpp>
+
+// Export the hardware interface plugin
+PLUGINLIB_EXPORT_CLASS(
+  diffbot_hardware::DiffBotSystem,
+  hardware_interface::SystemInterface)
