@@ -14,10 +14,8 @@
   <depend>serial</depend>
 
   <export>
-    <!-- Keep this so ament knows it -->
-    <build_type>ament_cmake</build_type>
-    <!-- Add this so pluginlib will load your XML -->
-    <pluginlib plugin="${prefix}/plugin_description.xml"/>
+  <build_type>ament_cmake</build_type>
+  <pluginlib plugin="${prefix}/plugin_description.xml"/>
   </export>
 
 </package>
