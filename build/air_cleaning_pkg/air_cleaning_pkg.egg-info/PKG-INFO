@@ -5,3 +5,4 @@ Summary: Air cleaning package : includes publisher node that prints pm data
 Maintainer: august
 Maintainer-email: augustruizbueche@gmail.com
 License: MIT
+License-File: LICENSE
