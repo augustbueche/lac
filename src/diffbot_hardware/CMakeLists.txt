@@ -7,6 +7,7 @@ find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(serial REQUIRED)
 
+# 1) Build your hardware plugin as a shared library
 add_library(${PROJECT_NAME} SHARED
   src/DiffBotSystem.cpp
 )
@@ -18,21 +19,21 @@ ament_target_dependencies(${PROJECT_NAME}
   serial
 )
 
-# Install the shared library
+# 2) Install the library into <install_prefix>/lib
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib
 )
 
-# Install the plugin description XML
+# 3) Install the plugin description XML to share/<pkg>
 install(FILES plugin_description.xml
   DESTINATION share/${PROJECT_NAME}
 )
 
-# Export the plugin to the ament index so pluginlib can find it
+# 4) Register it with pluginlib (this also indexes it for ament)
 pluginlib_export_plugin_description_file(
-  diffbot_hardware
+  ${PROJECT_NAME}
   plugin_description.xml
 )
 
