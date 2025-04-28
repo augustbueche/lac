@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>diffbot_hardware</name>
+  <version>0.0.0</version>
+  <description>Teensy↔ros2_control hardware interface for DiffBot</description>
+  <maintainer email="amhun@pdx.edu">lac</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>serial</depend>
+
+  <export>
+    <!-- Keep this so ament knows it -->
+    <build_type>ament_cmake</build_type>
+    <!-- Add this so pluginlib will load your XML -->
+    <pluginlib plugin="${prefix}/plugin_description.xml"/>
+  </export>
+
+</package>
