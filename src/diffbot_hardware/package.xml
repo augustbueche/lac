@@ -7,15 +7,12 @@
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
   <depend>rclcpp</depend>
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>serial</depend>
 
   <export>
-  <build_type>ament_cmake</build_type>
-  <pluginlib plugin="${prefix}/plugin_description.xml"/>
+    <build_type>ament_cmake</build_type>
   </export>
-
 </package>

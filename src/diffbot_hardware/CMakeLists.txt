@@ -7,7 +7,7 @@ find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(serial REQUIRED)
 
-# 1) Build your hardware plugin as a shared library
+# Build your hardware plugin as a shared library
 add_library(${PROJECT_NAME} SHARED
   src/DiffBotSystem.cpp
 )
@@ -19,21 +19,20 @@ ament_target_dependencies(${PROJECT_NAME}
   serial
 )
 
-# 2) Install the library into <install_prefix>/lib
+# Install the library
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib
 )
 
-# 3) Install the plugin description XML to share/<pkg>
-install(FILES plugin_description.xml
-  DESTINATION share/${PROJECT_NAME}
-)
-
-# 4) Register it with pluginlib (this also indexes it for ament)
+# *** THIS IS THE KEY CHANGE ***  
+# Export (and install!) your plugin_description.xml under the
+# hardware_interface package so that ros2_control_node’s loader
+# (which uses ClassLoader<...>("hardware_interface", ...))
+# can find it.
 pluginlib_export_plugin_description_file(
-  ${PROJECT_NAME}
+  hardware_interface
   plugin_description.xml
 )
 

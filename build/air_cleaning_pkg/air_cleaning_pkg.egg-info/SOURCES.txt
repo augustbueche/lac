@@ -1,3 +1,4 @@
+LICENSE
 package.xml
 setup.cfg
 setup.py
@@ -10,11 +11,7 @@ setup.py
 ../../build/air_cleaning_pkg/air_cleaning_pkg.egg-info/zip-safe
 air_cleaning_pkg/__init__.py
 air_cleaning_pkg/pm_sensor_publisher_node.py
-air_cleaning_pkg.egg-info/PKG-INFO
-air_cleaning_pkg.egg-info/SOURCES.txt
-air_cleaning_pkg.egg-info/dependency_links.txt
-air_cleaning_pkg.egg-info/entry_points.txt
-air_cleaning_pkg.egg-info/requires.txt
-air_cleaning_pkg.egg-info/top_level.txt
-air_cleaning_pkg.egg-info/zip-safe
 resource/air_cleaning_pkg
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py
