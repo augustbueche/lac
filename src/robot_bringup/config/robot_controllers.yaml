@@ -1,0 +1,25 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+joint_state_broadcaster:
+  ros__parameters:
+    # publishes /joint_states so tf can build your wheel frames
+    use_stamped_joint_state: false
+
+diff_drive_controller:
+  ros__parameters:
+    type: diff_drive_controller/DiffDriveController
+    left_wheel:  wheel_left_joint
+    right_wheel: wheel_right_joint
+    wheel_separation: 0.5        # ← your robot’s track width (m)
+    wheel_radius:    0.1        # ← your wheel radius (m)
+    publish_rate:    50
+    cmd_vel_timeout: 0.5
+    use_stamped_vel: true
+    linear:
+      x:
+        has_velocity: true
+    angular:
+      z:
+        has_velocity: true

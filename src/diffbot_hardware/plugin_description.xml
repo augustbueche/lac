@@ -1,0 +1,9 @@
+<library path="libdiffbot_hardware">
+  <class name="diffbot_hardware/DiffBotSystem"
+         type="diffbot_hardware::DiffBotSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for a 2-wheel differential-drive robot over serial.
+    </description>
+  </class>
+</library>
