@@ -1,23 +1,29 @@
 # src/robot_bringup/config/robot_controllers.yaml
 
-controller_manager:
+ros2_control_node:
   ros__parameters:
-    update_rate: 100  # matches ros2_control_node update rate
+    # controller_manager settings
+    update_rate: 100
+    autostart: true
 
-joint_state_broadcaster:
-  type: joint_state_broadcaster/JointStateBroadcaster
-  ros__parameters: {}
+    # JointStateBroadcaster (publishes /joint_states)
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+      ros__parameters: {}
 
-forward_command_controller:
-  type: diff_drive_controller/DifferentialDriveController
-  ros__parameters:
-    left_wheel_names:   ["wheel_left_joint"]
-    right_wheel_names:  ["wheel_right_joint"]
-    wheel_separation:   0.25    # from <xacro:property name="wheel_separation" value="0.25"/>
-    wheel_radius:       0.0325  # from <xacro:property name="wheel_radius" value="0.0325"/>
-    cmd_vel_timeout:    0.5
-    use_stamped_vel:    false
-    enable_odom_tf:     true
-    odom_frame_id:      "odom"
-    base_frame_id:      "base_link"
-    open_loop:          false
+    # Differential drive controller (listens /cmd_vel → drives wheels)
+    forward_command_controller:
+      type: diff_drive_controller/DifferentialDriveController
+      ros__parameters:
+        left_wheel_names:
+          - wheel_left_joint
+        right_wheel_names:
+          - wheel_right_joint
+        wheel_separation: 0.25
+        wheel_radius:   0.0325
+        cmd_vel_timeout: 0.5
+        use_stamped_vel: false
+        enable_odom_tf:  true
+        odom_frame_id:   odom
+        base_frame_id:   base_link
+        open_loop:       false

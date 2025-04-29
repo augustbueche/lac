@@ -8,13 +8,16 @@ setup(
     packages=find_packages(exclude=['test']),
     data_files=[
         # ament resource marker
-        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
         # package manifest
         ('share/' + package_name, ['package.xml']),
         # launch files
-        ('share/' + package_name + '/launch', ['launch/control_launch.py']),
-        # controller configuration
-        ('share/' + package_name + '/config', ['config/robot_controllers.yaml']),
+        ('share/' + package_name + '/launch',
+            ['launch/control_launch.py']),
+        # config files
+        ('share/' + package_name + '/config',
+            ['config/robot_controllers.yaml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -25,7 +28,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            # (none for now)
+            # no CLI tools yet
         ],
     },
 )
