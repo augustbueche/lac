@@ -26,21 +26,14 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION lib
 )
 
-# 3) Install your plugin XML for local debugging (optional)
+# 3) Install the plugin description XML into share/<pkg>/
 install(FILES plugin_description.xml
   DESTINATION share/${PROJECT_NAME}
 )
 
-# 4) ALSO install the same XML into the hardware_interface share
-#    so ros2_control_node’s ClassLoader<...>("hardware_interface", …)
-#    can actually find it. 
-install(FILES plugin_description.xml
-  DESTINATION share/hardware_interface
-)
-
-# 5) Register it with pluginlib’s index
+# 4) Tell ament/pluginlib to index that XML
 pluginlib_export_plugin_description_file(
-  hardware_interface
+  ${PROJECT_NAME}
   plugin_description.xml
 )
 
