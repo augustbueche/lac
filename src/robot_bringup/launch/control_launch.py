@@ -8,7 +8,7 @@ def generate_launch_description():
     bringup_share = get_package_share_directory('robot_bringup')
 
     urdf_path  = PathJoinSubstitution([desc_share,    'urdf',    'robot.urdf.xacro'])
-    cfg_path   = PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
+    cfg_path   = PathJoinSubstitution([bringup_share, 'config',  'robot_controllers.yaml'])
     robot_desc = Command(['xacro ', urdf_path])
 
     return LaunchDescription([
@@ -22,7 +22,7 @@ def generate_launch_description():
         Node(
             package='controller_manager',
             executable='ros2_control_node',
-            name='ros2_control_node',
+            name='controller_manager',           # <-- changed here
             output='screen',
             parameters=[
                 {'robot_description': robot_desc},

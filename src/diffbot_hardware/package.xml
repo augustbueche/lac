@@ -12,7 +12,10 @@
   <depend>pluginlib</depend>
   <depend>serial</depend>
 
-  <export>
-    <build_type>ament_cmake</build_type>
-  </export>
+<export>
+  <build_type>ament_cmake</build_type>
+  <!-- pluginlib will look for share/diffbot_hardware/plugin_description.xml -->
+  <pluginlib plugin="plugin_description.xml"/>
+</export>
+
 </package>
