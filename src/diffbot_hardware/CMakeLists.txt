@@ -21,9 +21,10 @@ add_library(${PROJECT_NAME} SHARED
 )
 
 ament_target_dependencies(${PROJECT_NAME}
-  rclcpp
   hardware_interface
   pluginlib
+  rclcpp
+  rclcpp_lifecyle
   ament_index_cpp
   serial
 )
