@@ -1,4 +1,4 @@
-<library path="libdiffbot_hardware">
+<library path="diffbot_hardware">
   <class name="diffbot_hardware/DiffBotSystem"
          type="diffbot_hardware::DiffBotSystem"
          base_class_type="hardware_interface::SystemInterface">

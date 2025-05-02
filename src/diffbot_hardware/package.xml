@@ -14,8 +14,7 @@
 
 <export>
   <build_type>ament_cmake</build_type>
-  <!-- pluginlib will look for share/diffbot_hardware/plugin_description.xml -->
-  <pluginlib plugin="plugin_description.xml"/>
+  <!-- Must match the CMake install above -->
+  <pluginlib plugin="${prefix}/plugins/plugin_description.xml"/>
 </export>
-
 </package>

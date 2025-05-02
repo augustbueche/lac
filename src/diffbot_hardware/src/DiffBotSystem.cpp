@@ -103,7 +103,8 @@ hardware_interface::return_type DiffBotSystem::write(
 
 #include <pluginlib/class_list_macros.hpp>
 
-// Export the hardware interface plugin
+// register your SystemInterface implementation with pluginlib
 PLUGINLIB_EXPORT_CLASS(
   diffbot_hardware::DiffBotSystem,
-  hardware_interface::SystemInterface)
+  hardware_interface::SystemInterface
+)
