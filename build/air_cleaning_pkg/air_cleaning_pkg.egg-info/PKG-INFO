@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: air-cleaning-pkg
-Version: 0.0.0
-Summary: Air cleaning package : includes publisher node that prints pm data
-Maintainer: august
-Maintainer-email: augustruizbueche@gmail.com
-License: MIT
-License-File: LICENSE
