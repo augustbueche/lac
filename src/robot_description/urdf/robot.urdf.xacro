@@ -15,7 +15,7 @@
   <!-- === PROPERTIES === -->
   <!-- Wheels -->
   <xacro:property name="wheel_radius"       value="0.0325"/>
-  <xacro:property name="wheel_separation"   value="0.25"/>
+  <xacro:property name="wheel_separation"   value="0.292"/>
   <xacro:property name="wheel_width"        value="0.027"/>
   <xacro:property name="wheel_mass"         value="0.034"/>
   <xacro:property name="wheel_inertia"      value="${0.5 * wheel_mass * wheel_radius * wheel_radius}"/>
