@@ -1,5 +1,17 @@
 {
     "files.associations": {
         "*.tcc": "cpp"
-    }
+    },
+    "python.autoComplete.extraPaths": [
+        "/home/elsabeth/workspace/lac/install/air_cleaning_pkg/lib/python3.12/site-packages",
+        "/home/elsabeth/ros2_ws/build/my_py_pkg",
+        "/home/elsabeth/ros2_ws/install/my_py_pkg/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/elsabeth/workspace/lac/install/air_cleaning_pkg/lib/python3.12/site-packages",
+        "/home/elsabeth/ros2_ws/build/my_py_pkg",
+        "/home/elsabeth/ros2_ws/install/my_py_pkg/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ]
 }
