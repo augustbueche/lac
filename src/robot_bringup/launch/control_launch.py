@@ -12,6 +12,8 @@ def generate_launch_description():
     robot_desc = Command(['xacro ', urdf_path])
 
     return LaunchDescription([
+        
+        # Launch robot state publisher
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -19,6 +21,8 @@ def generate_launch_description():
             output='screen',
             parameters=[{'robot_description': robot_desc}],
         ),
+        
+        # Load and configure ros2_control w controllers
         Node(
             package='controller_manager',
             executable='ros2_control_node',
@@ -28,5 +32,14 @@ def generate_launch_description():
                 {'robot_description': robot_desc},
                 cfg_path
             ],
+        ),
+        
+        # Launch forward command controller
+        Node(
+            package='controller_manager',
+            executable='spawner',
+            name='forward_command_controller',
+            output='screen',
+            arguments=['forward_command_controller'],
         ),
     ])

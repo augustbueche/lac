@@ -6,9 +6,13 @@ controller_manager:
     update_rate: 100
     autostart: true
 
+    controllers:
+      - joint_state_broadcaster
+      - forward_command_controller
+
     # only list the controller *types* here:
     joint_state_broadcaster:    { type: joint_state_broadcaster/JointStateBroadcaster }
-    forward_command_controller: { type: diff_drive_controller/DifferentialDriveController }
+    forward_command_controller: { type: diff_drive_controller/DiffDriveController }
 
 # each controller’s own parameters go in their own top-level node:
 joint_state_broadcaster:
