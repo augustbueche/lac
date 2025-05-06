@@ -30,3 +30,5 @@ forward_command_controller:
     odom_frame_id:      "odom"
     base_frame_id:      "base_link"
     open_loop:          false
+
+    
