@@ -6,15 +6,12 @@ controller_manager:
     update_rate: 100
     autostart: true
 
-    controllers:
-      - joint_state_broadcaster
-      - forward_command_controller
+    # controller types
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    forward_command_controller:
+      type: diff_drive_controller/DiffDriveController
 
-    # only list the controller *types* here:
-    joint_state_broadcaster:    { type: joint_state_broadcaster/JointStateBroadcaster }
-    forward_command_controller: { type: diff_drive_controller/DiffDriveController }
-
-# each controller’s own parameters go in their own top-level node:
 joint_state_broadcaster:
   ros__parameters: {}
 
@@ -30,5 +27,3 @@ forward_command_controller:
     odom_frame_id:      "odom"
     base_frame_id:      "base_link"
     open_loop:          false
-
-    

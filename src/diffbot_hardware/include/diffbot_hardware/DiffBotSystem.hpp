@@ -39,7 +39,7 @@ private:
 
   double left_vel_{0.0}, right_vel_{0.0};
   double left_cmd_{0.0}, right_cmd_{0.0};
-
+  double left_pos_{0.0}, right_pos_{0.0};
   double wheel_radius_{0.0325};  // meters, from your Xacro
 };
 
