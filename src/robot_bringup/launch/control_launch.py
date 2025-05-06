@@ -42,4 +42,16 @@ def generate_launch_description():
             output='screen',
             arguments=['forward_command_controller'],
         ),
-    ])
+
+         # Launch teleop_twist_keyboard for keyboard control
+        Node(
+            package='teleop_twist_keyboard',
+            executable='teleop_twist_keyboard',
+            name='teleop_keyboard',
+            output='screen',
+            prefix='xterm -e',  # Open in a separate terminal
+            remappings=[
+                ('/cmd_vel', '/forward_command_controller/cmd_vel')
+            ]
+        ),
+     ])
