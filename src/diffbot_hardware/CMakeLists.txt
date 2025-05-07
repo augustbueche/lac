@@ -15,6 +15,9 @@ find_package(rclcpp_lifecycle REQUIRED)
 
 include_directories(
   include
+  ${hardware_interface_INCLUDE_DIRS}
+  ${rclcpp_INCLUDE_DIRS}
+  ${serial_INCLUDE_DIRS}
 )
 
 # 1) Build the plugin (
