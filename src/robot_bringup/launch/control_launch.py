@@ -33,6 +33,15 @@ def generate_launch_description():
                 cfg_path
             ],
         ),
+
+        Node(
+            package='controller_manager',
+            executable='spawner',
+            arguments=['joint_state_broadcaster'],
+            name='joint_state_broadcaster_spawner',
+            output='screen',
+        ),
+
         
         # Launch forward command controller
         Node(
