@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "*.tcc": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/lac/workspace/lac/src/diffbot_hardware"
 }
