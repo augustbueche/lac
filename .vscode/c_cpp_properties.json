@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/opt/ros/jazzy/include",
-                "/home/workspace/lac/install/**/include"
+                "/home/lac/workspace/lac/install/**/include"
             ],
             "defines": [],
             "cStandard": "c17",
