@@ -79,7 +79,8 @@ def generate_launch_description():
             prefix='xterm -e',
             parameters=[{
                 'scale_linear': 0.3,
-                'scale_angular': 1.0
+                'scale_angular': 1.0,
+                'stamped': True,
             }],
             remappings=[
                 ('/cmd_vel', '/forward_command_controller/cmd_vel')
