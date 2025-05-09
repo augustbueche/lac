@@ -1,9 +1,10 @@
 {
     "files.associations": {
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "sstream": "cpp"
     },
     "C_Cpp.default.compileCommands": [
-        
+
         ""
     ]
 }
