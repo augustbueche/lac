@@ -1,0 +1,18 @@
+{
+	"configurations": [
+    	{
+        	"name": "Linux",
+        	"includePath": [
+            	"${workspaceFolder}/**",
+            	"/opt/ros/jazzy/include",
+            	"/home/workspace/lac/install/**/include"
+        	],
+        	"defines": [],
+        	"cStandard": "c17",
+        	"cppStandard": "gnu++17",
+        	"intelliSenseMode": "linux-gcc-arm64",
+        	"configurationProvider": "ms-vscode.cmake-tools"
+    	}
+	],
+	"version": 4
+}

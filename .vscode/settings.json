@@ -1,5 +1,9 @@
 {
     "files.associations": {
         "*.tcc": "cpp"
-    }
+    },
+    "C_Cpp.default.compileCommands": [
+        
+        ""
+    ]
 }
