@@ -23,6 +23,16 @@ def generate_launch_description():
         ),
 
         # Load and configure ros2_control with controllers
+        #Node(
+            #package='controller_manager',
+            #executable='ros2_control_node',
+            #name='controller_manager',
+            #output='screen',
+            #parameters=[
+             #   {'robot_description': robot_desc},
+             #   cfg_path
+            #],
+       # ),
         Node(
             package='controller_manager',
             executable='ros2_control_node',
@@ -30,9 +40,9 @@ def generate_launch_description():
             output='screen',
             parameters=[
                 {'robot_description': robot_desc},
-                cfg_path
+               PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
             ],
-        ),
+         ),
 
         # Spawn joint_state_broadcaster
         Node(
@@ -41,6 +51,10 @@ def generate_launch_description():
             arguments=['joint_state_broadcaster'],
             name='joint_state_broadcaster_spawner',
             output='screen',
+             parameters=[
+                {'robot_description': robot_desc},
+                cfg_path
+            ],
         ),
 
         # Spawn forward_command_controller
@@ -50,6 +64,10 @@ def generate_launch_description():
             arguments=['forward_command_controller'],
             name='forward_command_controller_spawner',
             output='screen',
+            parameters=[
+                {'robot_description': robot_desc},
+                cfg_path
+            ],
         ),
 
         # Launch teleop_twist_keyboard with remapping
