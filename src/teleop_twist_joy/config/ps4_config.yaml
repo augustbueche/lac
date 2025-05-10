@@ -1,0 +1,15 @@
+teleop_twist_joy:
+  ros__parameters:
+    enable_button: 5             # R1 must be held to move
+    require_enable_button: true
+    enable_turbo_button: 4       # L1 for turbo
+
+    axis_linear.x: 1               # Left stick vertical (forward/back)
+    scale_linear.x: -0.5
+    scale_linear_turbo.x: -1.0
+    
+    axis_angular.yaw: 0              # Left stick horizontal (turn)
+    scale_angular.yaw: 1.0
+    scale_angular_turbo.yaw: 2.0
+
+    publish_stamped_twist: true
