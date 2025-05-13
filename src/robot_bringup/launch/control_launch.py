@@ -133,7 +133,7 @@ def generate_launch_description():
                 'config_filepath': PathJoinSubstitution([bringup_share, 'config', 'twist_mux_topics.yaml'])
             }],
             remappings=[
-                ('/cmd_vel', '/forward_command_controller/cmd_vel')
+                ('/cmd_vel_out', '/forward_command_controller/cmd_vel')
             ]
         )
     ])
