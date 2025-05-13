@@ -98,11 +98,12 @@ def generate_launch_description():
             executable='teleop_node',
             name='teleop_twist_joy',
             output='screen',
-            parameters=[{
+            parameters=[
+                {'stamped': True},
                # 'scale_linear': 0.3,
                # 'scale_angular': 1.0,
-                'stamped': True,
-                'config_filepath' : PathJoinSubstitution([teleop_share, 'config', 'ps4.config.yaml']),
+                
+                {'config_filepath' : PathJoinSubstitution([teleop_share, 'config', 'ps4.config.yaml']),
             }],
             remappings=[
                 ('/cmd_vel', '/cmd_vel_joy')
