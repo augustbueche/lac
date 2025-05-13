@@ -22,7 +22,7 @@ forward_command_controller:
     wheel_separation:   0.25
     wheel_radius:       0.0325
     cmd_vel_timeout:    2.0
-    use_stamped_vel:    false
+    use_stamped_vel:    true
     enable_odom_tf:     true
     odom_frame_id:      "odom"
     base_frame_id:      "base_link"

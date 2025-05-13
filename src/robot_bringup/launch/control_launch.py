@@ -1,3 +1,4 @@
+import os
 from launch import LaunchDescription
 from launch.substitutions import Command, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -6,7 +7,8 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     desc_share    = get_package_share_directory('robot_description')
     bringup_share = get_package_share_directory('robot_bringup')
-
+    teleop_share = get_package_share_directory('teleop_twist_joy')
+    mux_share = get_package_share_directory('twist_mux')
     urdf_path  = PathJoinSubstitution([desc_share, 'urdf', 'robot.urdf.xacro'])
     cfg_path   = PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
     robot_desc = Command(['xacro ', urdf_path])
@@ -22,17 +24,7 @@ def generate_launch_description():
             parameters=[{'robot_description': robot_desc}],
         ),
 
-        # Load and configure ros2_control with controllers
-        #Node(
-            #package='controller_manager',
-            #executable='ros2_control_node',
-            #name='controller_manager',
-            #output='screen',
-            #parameters=[
-             #   {'robot_description': robot_desc},
-             #   cfg_path
-            #],
-       # ),
+        #Launch control node
         Node(
             package='controller_manager',
             executable='ros2_control_node',
@@ -107,10 +99,10 @@ def generate_launch_description():
             name='teleop_twist_joy',
             output='screen',
             parameters=[{
-                'scale_linear': 0.3,
-                'scale_angular': 1.0,
+               # 'scale_linear': 0.3,
+               # 'scale_angular': 1.0,
                 'stamped': True,
-                'config_filepath': PathJoinSubstitution([bringup_share, 'config', 'ps4.config.yaml'])
+                'config_filepath' : PathJoinSubstitution([teleop_share, 'config', 'ps4.config.yaml']),
             }],
             remappings=[
                 ('/cmd_vel', '/cmd_vel_joy')
@@ -126,11 +118,15 @@ def generate_launch_description():
             name='twist_mux',
             output='screen',
             parameters=[{
+                PathJoinSubstitution([mux_share, 'config', 'twist_mux_topics.yaml']),
+                
+                {
                 'cmd_vel_timeout': 0.5,
                 'cmd_vel_key_timeout': 0.5,
                 'cmd_vel_joy_timeout': 0.5,
                 'cmd_vel_mux_timeout': 0.5,
-                'config_filepath': PathJoinSubstitution([bringup_share, 'config', 'twist_mux_topics.yaml'])
+                'use_stamped' : True,
+                },
             }],
             remappings=[
                 ('/cmd_vel_out', '/forward_command_controller/cmd_vel')
