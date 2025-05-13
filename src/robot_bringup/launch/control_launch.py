@@ -83,6 +83,56 @@ def generate_launch_description():
                 'stamped': True,
             }],
             remappings=[
+                ('/cmd_vel', '/cmd_vel_key')
+            ]
+        ),
+
+        # Launch joy node
+        Node(
+            package='joy',
+            executable='joy_node',
+            name='joy_node',
+            output='screen',
+            parameters=[{
+                'device_id': 0,
+                'deadzone': 0.1,
+                'autorepeat_rate': 20.0,
+            }]
+        ),
+
+        # Launch teleop_twist_joy with remapping
+        Node(
+            package='teleop_twist_joy',
+            executable='teleop_node',
+            name='teleop_twist_joy',
+            output='screen',
+            parameters=[{
+                'scale_linear': 0.3,
+                'scale_angular': 1.0,
+                'stamped': True,
+                'config_filepath': PathJoinSubstitution([bringup_share, 'config', 'ps4.config.yaml'])
+            }],
+            remappings=[
+                ('/cmd_vel', '/cmd_vel_joy')
+            ]
+        ),
+
+        # Launch twist_mux with remapping
+        # This node will multiplex the cmd_vel topic from teleop_twist_keyboard and teleop_twist_joy
+        # and publish to the /forward_command_controller/cmd_vel topic
+        Node(
+            package='twist_mux',
+            executable='twist_mux',
+            name='twist_mux',
+            output='screen',
+            parameters=[{
+                'cmd_vel_timeout': 0.5,
+                'cmd_vel_key_timeout': 0.5,
+                'cmd_vel_joy_timeout': 0.5,
+                'cmd_vel_mux_timeout': 0.5,
+                'config_filepath': PathJoinSubstitution([bringup_share, 'config', 'twist_mux_topics.yaml'])
+            }],
+            remappings=[
                 ('/cmd_vel', '/forward_command_controller/cmd_vel')
             ]
         )

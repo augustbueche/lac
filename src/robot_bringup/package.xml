@@ -10,7 +10,10 @@
   <depend>controller_manager</depend>
   <depend>xacro</depend>
   <depend>teleop_twist_keyboard</depend>
+  <depend>teleop_twist_joy</depend>
+  <depend>joy</depend>
   <depend>robot_state_publisher</depend>
+  <depend>twist_mux</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
