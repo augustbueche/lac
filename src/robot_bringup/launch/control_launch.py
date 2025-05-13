@@ -117,7 +117,7 @@ def generate_launch_description():
             executable='twist_mux',
             name='twist_mux',
             output='screen',
-            parameters=[{
+            parameters=[
                 PathJoinSubstitution([mux_share, 'config', 'twist_mux_topics.yaml']),
                 
                 {
@@ -125,9 +125,9 @@ def generate_launch_description():
                 'cmd_vel_key_timeout': 0.5,
                 'cmd_vel_joy_timeout': 0.5,
                 'cmd_vel_mux_timeout': 0.5,
-                'use_stamped' : True,
+                #'use_stamped' : True,
                 },
-            }],
+            ],
             remappings=[
                 ('/cmd_vel_out', '/forward_command_controller/cmd_vel')
             ]
