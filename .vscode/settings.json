@@ -3,8 +3,9 @@
         "*.tcc": "cpp",
         "sstream": "cpp"
     },
-    "C_Cpp.default.compileCommands": [
+    
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",  // or linux-gcc-arm64 if on ARM
+    "C_Cpp.default.compilerPath": "/usr/bin/gcc"
 
-        ""
-    ]
 }

@@ -112,7 +112,7 @@ TeleopTwistJoy::TeleopTwistJoy(const rclcpp::NodeOptions & options)
   pimpl_->inverted_reverse = this->declare_parameter("inverted_reverse", false);
 
   std::map<std::string, int64_t> default_linear_map{
-    {"x", 5L},
+    {"x", 1L},
     {"y", -1L},
     {"z", -1L},
   };
@@ -120,7 +120,7 @@ TeleopTwistJoy::TeleopTwistJoy(const rclcpp::NodeOptions & options)
   this->get_parameters("axis_linear", pimpl_->axis_linear_map);
 
   std::map<std::string, int64_t> default_angular_map{
-    {"yaw", 2L},
+    {"yaw", 0L},
     {"pitch", -1L},
     {"roll", -1L},
   };
