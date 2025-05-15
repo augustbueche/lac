@@ -37,7 +37,7 @@ hardware_interface::CallbackReturn DiffBotSystem::on_init(
   try {
     serial_port_.setPort(port_);
     serial_port_.setBaudrate(static_cast<uint32_t>(baud_rate_));
-    serial::Timeout to = serial::Timeout::simpleTimeout(1000);
+    serial::Timeout to = serial::Timeout::simpleTimeout(10);
     serial_port_.setTimeout(to);
     serial_port_.open();
   } catch (const std::exception & e) {

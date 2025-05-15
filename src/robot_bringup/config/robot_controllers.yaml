@@ -21,7 +21,7 @@ forward_command_controller:
     right_wheel_names:  ["wheel_right_joint"]
     wheel_separation:   0.25
     wheel_radius:       0.0325
-    cmd_vel_timeout:    2.0
+    cmd_vel_timeout:    0.1
     use_stamped_vel:    true
     enable_odom_tf:     true
     odom_frame_id:      "odom"
