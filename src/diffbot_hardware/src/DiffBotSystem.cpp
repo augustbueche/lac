@@ -2,6 +2,8 @@
 
 #include <hardware_interface/types/hardware_interface_type_values.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp/node.hpp>
+#include <sensor_msgs/msg/range.hpp>
 #include <sstream>
 #include <vector>
 #include <optional>
@@ -44,6 +46,13 @@ hardware_interface::CallbackReturn DiffBotSystem::on_init(
     return CallbackReturn::ERROR;
   }
 
+  // ROS 2 node handle and ultrasonic publishers
+  sensor_node_ = rclcpp::Node::make_shared("ultrasonic_sensor_node");
+  ultra_pub_a_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_a", 10);
+  ultra_pub_b_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_b", 10);
+  ultra_pub_c_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_c", 10);
+
+
   return CallbackReturn::SUCCESS;
 }
 
@@ -76,24 +85,58 @@ DiffBotSystem::export_command_interfaces()
 hardware_interface::return_type DiffBotSystem::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
 {
-  if (serial_port_.available()) {
+  while (serial_port_.available()) {
     std::string line = serial_port_.readline(256, "\n");
-    auto parse_val = [&](const std::string & key) -> std::optional<double> {
-      auto pos = line.find(key);
-      if (pos == std::string::npos) return std::nullopt;
-      return std::stod(line.substr(pos + key.size()));
-    };
 
-    auto l = parse_val("Left Encoder:");
-    auto r = parse_val("Right Encoder:");
+    if (line.find("Left Encoder:") != std::string::npos) {
+      auto parse_val = [&](const std::string & key) -> std::optional<double> {
+        auto pos = line.find(key);
+        if (pos == std::string::npos) return std::nullopt;
+        return std::stod(line.substr(pos + key.size()));
+      };
 
-    if (l && r) {
-      left_vel_  = *l;
-      right_vel_ = *r;
-      left_pos_  += left_vel_ * period.seconds();
-      right_pos_ += right_vel_ * period.seconds();
+      auto l = parse_val("Left Encoder:");
+      auto r = parse_val("Right Encoder:");
+
+      if (l && r) {
+        left_vel_  = *l;
+        right_vel_ = *r;
+        left_pos_  += left_vel_ * period.seconds();
+        right_pos_ += right_vel_ * period.seconds();
+      }
+    }
+
+    if (line.find("UltraA:") != std::string::npos) {
+      auto parse_val = [&](const std::string & key) -> std::optional<double> {
+        auto pos = line.find(key);
+        if (pos == std::string::npos) return std::nullopt;
+        return std::stod(line.substr(pos + key.size()));
+      };
+
+      auto a = parse_val("UltraA:");
+      auto b = parse_val("UltraB:");
+      auto c = parse_val("UltraC:");
+
+      auto publish_range = [&](std::optional<double> dist_cm, auto pub, const std::string & frame_id) {
+        if (!dist_cm) return;
+        sensor_msgs::msg::Range msg;
+        msg.header.stamp = sensor_node_->get_clock()->now();
+        msg.header.frame_id = frame_id;
+        msg.radiation_type = sensor_msgs::msg::Range::ULTRASOUND;
+        msg.field_of_view = 0.3;
+        msg.min_range = 0.02;
+        msg.max_range = 4.0;
+        msg.range = *dist_cm / 100.0;  // cm → m
+        pub->publish(msg);
+      };
+
+      publish_range(a, ultra_pub_a_, "ultrasonic_a_link");
+      publish_range(b, ultra_pub_b_, "ultrasonic_b_link");
+      publish_range(c, ultra_pub_c_, "ultrasonic_c_link");
     }
   }
+
+
   return return_type::OK;
 }
 

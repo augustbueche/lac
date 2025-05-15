@@ -11,6 +11,10 @@
   <material name="White">
     <color rgba="1 1 1 1"/>
   </material>
+  <material name="Red">
+    <color rgba="0.8 0.1 0.1 1"/>
+  </material>
+
 
   <!-- === PROPERTIES === -->
   <!-- Wheels -->
@@ -104,6 +108,38 @@
     </visual>
   </link>
 
+  <!-- === Ultrasonic Sensor Links === -->
+<link name="ultrasonic_a_link">
+  <visual>
+    <geometry>
+      <cylinder radius="0.01" length="0.02"/>
+    </geometry>
+    <origin xyz="0 0 0" rpy="0 1.5708 0"/> <!-- sideways orientation -->
+    <material name="Red"/>
+  </visual>
+</link>
+
+<link name="ultrasonic_b_link">
+  <visual>
+    <geometry>
+      <cylinder radius="0.01" length="0.02"/>
+    </geometry>
+    <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+    <material name="Red"/>
+  </visual>
+</link>
+
+<link name="ultrasonic_c_link">
+  <visual>
+    <geometry>
+      <cylinder radius="0.01" length="0.02"/>
+    </geometry>
+    <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+    <material name="Red"/>
+  </visual>
+</link>
+
+
   <!-- === JOINTS === -->
   <joint name="wheel_left_joint" type="continuous">
     <parent link="base_link"/>
@@ -136,6 +172,26 @@
     <child  link="camera_link"/>
     <origin xyz="${camera_xyz}" rpy="${camera_rpy}"/>
   </joint>
+
+  <!-- === Ultrasonic Sensor Joints === -->
+  <joint name="ultrasonic_a_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="ultrasonic_a_link"/>
+    <origin xyz="${base_radius} 0 ${-base_height/2 + 0.02}" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="ultrasonic_b_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="ultrasonic_b_link"/>
+    <origin xyz="${base_radius * cos(-0.5236)} ${base_radius * sin(-0.5236)} ${-base_height/2 + 0.02}" rpy="0 0 -0.5236"/>
+  </joint>
+
+  <joint name="ultrasonic_c_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="ultrasonic_c_link"/>
+    <origin xyz="${base_radius * cos(0.5236)} ${base_radius * sin(0.5236)} ${-base_height/2 + 0.02}" rpy="0 0 0.5236"/>
+  </joint>
+
 
   <!-- === ros2_control === -->
   <ros2_control name="diffbot_system" type="system">
