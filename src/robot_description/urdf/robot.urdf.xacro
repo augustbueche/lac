@@ -197,7 +197,7 @@
   <ros2_control name="diffbot_system" type="system">
     <hardware>
       <plugin>diffbot_hardware/DiffBotSystem</plugin>
-      <param name="serial_port">/dev/ttyACM1</param>
+      <param name="serial_port">/dev/ttyUSB_TEENSY</param>
       <param name="baud_rate">115200</param>
     </hardware>
     <joint name="wheel_left_joint">
