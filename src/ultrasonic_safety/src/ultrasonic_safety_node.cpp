@@ -4,26 +4,28 @@
 
 class UltrasonicSafetyNode : public rclcpp::Node {
 public:
-  UltrasonicSafetyNode() : Node("ultrasonic_safety_node") {
-    clock_ = this->get_clock();
-    ultra_a_sub_ = create_subscription<sensor_msgs::msg::Range>(
-      "ultrasonic_a", 10,
-      std::bind(&UltrasonicSafetyNode::ultrasonicCallbackA, this, std::placeholders::_1));
+ UltrasonicSafetyNode() : Node("ultrasonic_safety_node") {
+  clock_ = std::make_shared<rclcpp::Clock>(RCL_SYSTEM_TIME);  // <--- THIS FIXES THE ERROR
 
-    ultra_b_sub_ = create_subscription<sensor_msgs::msg::Range>(
-      "ultrasonic_b", 10,
-      std::bind(&UltrasonicSafetyNode::ultrasonicCallbackB, this, std::placeholders::_1));
+  ultra_a_sub_ = create_subscription<sensor_msgs::msg::Range>(
+    "ultrasonic_a", 10,
+    std::bind(&UltrasonicSafetyNode::ultrasonicCallbackA, this, std::placeholders::_1));
 
-    ultra_c_sub_ = create_subscription<sensor_msgs::msg::Range>(
-      "ultrasonic_c", 10,
-      std::bind(&UltrasonicSafetyNode::ultrasonicCallbackC, this, std::placeholders::_1));
+  ultra_b_sub_ = create_subscription<sensor_msgs::msg::Range>(
+    "ultrasonic_b", 10,
+    std::bind(&UltrasonicSafetyNode::ultrasonicCallbackB, this, std::placeholders::_1));
 
-    safety_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel", 10);
+  ultra_c_sub_ = create_subscription<sensor_msgs::msg::Range>(
+    "ultrasonic_c", 10,
+    std::bind(&UltrasonicSafetyNode::ultrasonicCallbackC, this, std::placeholders::_1));
 
-    timer_ = create_wall_timer(
-      std::chrono::milliseconds(50),
-      std::bind(&UltrasonicSafetyNode::publishSafetyCommand, this));
-  }
+  safety_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel", 10);
+
+  timer_ = create_wall_timer(
+    std::chrono::milliseconds(50),
+    std::bind(&UltrasonicSafetyNode::publishSafetyCommand, this));
+}
+
 
 private:
   void ultrasonicCallbackA(const sensor_msgs::msg::Range::SharedPtr msg) {
