@@ -101,7 +101,20 @@ def generate_launch_description():
       ),
 
 
-
+      Node(
+            package='ultrasonic_safety',
+            executable='ultrasonic_safety_node',
+            name='ultrasonic_safety_node',
+            output='screen',
+            parameters=[{
+                #'scale_linear': 0.3,
+                #'scale_angular': 1.0,
+                'stamped': True,
+            }],
+            remappings=[
+                ('/cmd_vel', '/cmd_vel_ultra')
+            ]
+      ),
 
       # Launch joy node
       Node(

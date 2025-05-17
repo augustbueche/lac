@@ -17,13 +17,14 @@ twist_mux:
       joystick:
         topic   : cmd_vel_joy
         timeout : 0.5
-        priority: 100
+        priority: 90
       
       keyboard:
         topic   : cmd_vel_key 
         timeout : 0.5
-        priority: 90
-      tablet:
-        topic   : tab_vel
+        priority: 80
+
+      ultrasonic:
+        topic   : cmd_vel_ultra
         timeout : 0.5
         priority: 100
