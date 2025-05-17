@@ -5,6 +5,7 @@
 class UltrasonicSafetyNode : public rclcpp::Node {
 public:
   UltrasonicSafetyNode() : Node("ultrasonic_safety_node") {
+    clock_ = this->get_clock();
     ultra_a_sub_ = create_subscription<sensor_msgs::msg::Range>(
       "ultrasonic_a", 10,
       std::bind(&UltrasonicSafetyNode::ultrasonicCallbackA, this, std::placeholders::_1));
@@ -39,7 +40,8 @@ private:
 
   void publishSafetyCommand() {
     geometry_msgs::msg::TwistStamped cmd_vel;
-
+    cmd_vel.header.stamp = clock_->now();
+    cmd_vel.header.frame_id = "base_link";
     bool obstacle_present = obstacle_a_detected_ || obstacle_b_detected_ || obstacle_c_detected_;
 
     if (obstacle_present) {
@@ -47,10 +49,10 @@ private:
       cmd_vel.twist.linear.x = -0.1;     // reverse
       cmd_vel.twist.angular.z = 0.5;     // rotate
       safety_pub_->publish(cmd_vel);
-      last_obstacle_time_ = now();
+      last_obstacle_time_ = clock_->now();
     } else {
       // Only publish stop if we just recently exited obstacle state
-      if ((now() - last_obstacle_time_).seconds() < stop_duration_) {
+      if ((clock_->now()- last_obstacle_time_).seconds() < stop_duration_) {
         cmd_vel.twist.linear.x = 0.0;
         cmd_vel.twist.angular.z = 0.0;
         safety_pub_->publish(cmd_vel);
@@ -75,6 +77,7 @@ private:
 
   // Time tracking
   rclcpp::Time last_obstacle_time_;
+  rclcpp::Clock::SharedPtr clock_;
 
   // Constants
   const double safety_distance_threshold_ = 0.25;  // meters
