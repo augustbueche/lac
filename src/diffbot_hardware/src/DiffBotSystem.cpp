@@ -4,6 +4,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/node.hpp>
 #include <sensor_msgs/msg/range.hpp>
+#include <std_msgs/msg/bool.hpp>
 #include <sstream>
 #include <vector>
 #include <optional>
@@ -51,6 +52,7 @@ hardware_interface::CallbackReturn DiffBotSystem::on_init(
   ultra_pub_a_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_a", 10);
   ultra_pub_b_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_b", 10);
   ultra_pub_c_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_c", 10);
+  cliff_pub_ = sensor_node_->create_publisher<std_msgs::msg::Bool>("cliff_safe", 10);
 
 
   return CallbackReturn::SUCCESS;
@@ -133,7 +135,21 @@ hardware_interface::return_type DiffBotSystem::read(
       publish_range(a, ultra_pub_a_, "ultrasonic_a_link");
       publish_range(b, ultra_pub_b_, "ultrasonic_b_link");
       publish_range(c, ultra_pub_c_, "ultrasonic_c_link");
-    }
+
+      publish_range(c, ultra_pub_c_, "ultrasonic_c_link");
+
+      // --- Cliff sensor ---
+      auto cliff_str_pos = line.find("Cliff:");
+      if (cliff_str_pos != std::string::npos) {
+        std::string value_str = line.substr(cliff_str_pos + 6);
+        int cliff_val = std::stoi(value_str);
+        std_msgs::msg::Bool msg;
+        msg.data = (cliff_val == 0);  // 0 = safe → true; 1 = cliff detected → false
+        cliff_pub_->publish(msg);
+      
+
+      }
+    }  
   }
 
 

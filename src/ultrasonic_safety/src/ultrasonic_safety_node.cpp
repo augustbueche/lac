@@ -1,6 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/range.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
+#include <std_msgs/msg/bool.hpp>
 
 class UltrasonicSafetyNode : public rclcpp::Node {
 public:
@@ -18,6 +19,14 @@ public:
   ultra_c_sub_ = create_subscription<sensor_msgs::msg::Range>(
     "ultrasonic_c", 10,
     std::bind(&UltrasonicSafetyNode::ultrasonicCallbackC, this, std::placeholders::_1));
+  
+  // Cliff sensor subscription
+  cliff_sub_ = create_subscription<std_msgs::msg::Bool>(
+    "cliff_safe", 10,
+    [this](const std_msgs::msg::Bool::SharedPtr msg) {
+      cliff_detected_ = (msg->data == false);  // false = cliff detected
+    });
+
 
   safety_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel", 10);
 
@@ -44,7 +53,7 @@ private:
     geometry_msgs::msg::TwistStamped cmd_vel;
     cmd_vel.header.stamp = clock_->now();
     cmd_vel.header.frame_id = "base_link";
-    bool obstacle_present = obstacle_a_detected_ || obstacle_b_detected_ || obstacle_c_detected_;
+    bool obstacle_present = obstacle_a_detected_ || obstacle_b_detected_ || obstacle_c_detected_ || cliff_detected_;
 
     if (obstacle_present) {
       // Keep reversing and rotating while any obstacle is detected
@@ -67,6 +76,7 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::Range>::SharedPtr ultra_a_sub_;
   rclcpp::Subscription<sensor_msgs::msg::Range>::SharedPtr ultra_b_sub_;
   rclcpp::Subscription<sensor_msgs::msg::Range>::SharedPtr ultra_c_sub_;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr cliff_sub_;
 
   // Publisher
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr safety_pub_;
@@ -76,6 +86,7 @@ private:
   bool obstacle_a_detected_ = false;
   bool obstacle_b_detected_ = false;
   bool obstacle_c_detected_ = false;
+  bool cliff_detected_ = false;
 
   // Time tracking
   rclcpp::Time last_obstacle_time_;

@@ -13,6 +13,7 @@
 #include <rclcpp/node.hpp>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/range.hpp>
+#include <std_msgs/msg/bool.hpp>
 #include <serial/serial.h>
 
 namespace diffbot_hardware
@@ -47,11 +48,14 @@ private:
   double left_pos_{0.0}, right_pos_{0.0};
   double wheel_radius_{0.0325};  // meters, from your Xacro
 
-  // ROS pulishers for ultrasonic sensors
+  // ROS publishers for ultrasonic sensors
   rclcpp::Node::SharedPtr sensor_node_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_a_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_b_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_c_;
+
+  // ROS publisher for cliff sensor
+  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr cliff_pub_;
 
   // Cached distance readings (this is storing the ultrasonic sensor readings)
   double ultra_a_{-1.0};
