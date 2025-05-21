@@ -53,8 +53,6 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_a_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_b_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_c_;
-
-  // ROS publisher for cliff sensor
   rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr cliff_pub_;
 
   // Cached distance readings (this is storing the ultrasonic sensor readings)
