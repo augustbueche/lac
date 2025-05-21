@@ -18,7 +18,8 @@ setup(
         # config files
         ('share/' + package_name + '/config',
             ['config/robot_controllers.yaml',
-             'config/rvisconfig.rviz']),
+             'config/rvisconfig.rviz',
+             'config/mapper_params_online_async.yaml',]),
         
     ],
     install_requires=['setuptools'],

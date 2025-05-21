@@ -22,6 +22,7 @@ def generate_launch_description():
   urdf_path  = PathJoinSubstitution([desc_share, 'urdf', 'robot.urdf.xacro'])
   cfg_path   = PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
   rviz_config_path = PathJoinSubstitution([bringup_share, 'config', 'rvisconfig.rviz'])
+  slam_path = PathJoinSubstitution([bringup_share, 'config', 'mapper_params_online_async.yaml'])
   robot_desc = Command(['xacro ', urdf_path])
   
   # Launch configurations
@@ -125,14 +126,36 @@ def generate_launch_description():
           ],
       ),
       
+      # Launch SLAM Toolbox with predefined path
+      Node(
+          package='slam_toolbox',
+          executable='async_slam_toolbox_node',  # or 'sync_slam_toolbox_node' if you're using synchronous mode
+          name='slam_toolbox',
+          output='screen',
+          parameters=[slam_path],
+          remappings=[
+            
+         ]
+      ),
+
 
       Node(
-         package='tf2_ros',
-         executable='static_transform_publisher',
-         name='static_laser_tf',
-         arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'laser_link'],
-         output='screen'
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_laser_tf',
+        arguments=[
+        '--x', '0',
+        '--y', '0',
+        '--z', '0',
+        '--roll', '0',
+        '--pitch', '0',
+        '--yaw', '0',
+        '--frame-id', 'base_link',
+        '--child-frame-id', 'laser_link'
+        ],
+        output='screen'
       ),
+
 
       # Launch RVIZ2
       Node(
