@@ -17,7 +17,9 @@ setup(
             ['launch/control_launch.py']),
         # config files
         ('share/' + package_name + '/config',
-            ['config/robot_controllers.yaml']),
+            ['config/robot_controllers.yaml',
+             'config/rvisconfig.rviz']),
+        
     ],
     install_requires=['setuptools'],
     zip_safe=True,

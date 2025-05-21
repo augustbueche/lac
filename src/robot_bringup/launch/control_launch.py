@@ -21,7 +21,7 @@ def generate_launch_description():
   #file paths
   urdf_path  = PathJoinSubstitution([desc_share, 'urdf', 'robot.urdf.xacro'])
   cfg_path   = PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
-  rviz_config_path = PathJoinSubstitution([bringup_share, 'config', 'test_rvisconfig.rviz'])
+  rviz_config_path = PathJoinSubstitution([bringup_share, 'config', 'rvisconfig.rviz'])
   robot_desc = Command(['xacro ', urdf_path])
   
   # Launch configurations
@@ -60,7 +60,7 @@ def generate_launch_description():
         DeclareLaunchArgument('lidar_serial_port', default_value='/dev/ttyUSB_LIDAR'),
         #DeclareLaunchArgument('teensy_serial_port', default_value='/dev/ttyUSB_TEENSY'),
         DeclareLaunchArgument('serial_baudrate', default_value='115200'),
-        DeclareLaunchArgument('frame_id', default_value='lidar_link'),
+        DeclareLaunchArgument('frame_id', default_value='laser_link'),
         DeclareLaunchArgument('inverted', default_value='false'),
         DeclareLaunchArgument('angle_compensate', default_value='true'),
         DeclareLaunchArgument('scan_mode', default_value='Sensitivity'),
@@ -130,10 +130,10 @@ def generate_launch_description():
          package='tf2_ros',
          executable='static_transform_publisher',
          name='static_laser_tf',
-         arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'laser'],
+         arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'laser_link'],
          output='screen'
       ),
-      
+
       # Launch RVIZ2
       Node(
           package='rviz2',
