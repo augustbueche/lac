@@ -48,7 +48,8 @@ private:
 
     if (obstacle_present) {
       // Keep reversing and rotating while any obstacle is detected
-      cmd_vel.twist.linear.x = -0.1;     // reverse
+      cmd_vel.twist.linear.x = 0.0;     // reverse
+      //cmd_vel.twist.linear.x = -0.1;     // reverse
       cmd_vel.twist.angular.z = 0.5;     // rotate
       safety_pub_->publish(cmd_vel);
       last_obstacle_time_ = clock_->now();
