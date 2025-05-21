@@ -1,5 +1,9 @@
 import os
 from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 from launch.substitutions import Command, PathJoinSubstitution
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
@@ -8,19 +12,60 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
+  #package paths
   desc_share    = get_package_share_directory('robot_description')
   bringup_share = get_package_share_directory('robot_bringup')
   teleop_share = get_package_share_directory('teleop_twist_joy')
   mux_share = get_package_share_directory('twist_mux')
+
+  #file paths
   urdf_path  = PathJoinSubstitution([desc_share, 'urdf', 'robot.urdf.xacro'])
   cfg_path   = PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
+  rviz_config_path = PathJoinSubstitution([bringup_share, 'config', 'test_rvisconfig.rviz'])
   robot_desc = Command(['xacro ', urdf_path])
+  
+  # Launch configurations
+  lidar_serial_port = LaunchConfiguration('lidar_serial_port')
+    #teensy_serial_port = LaunchConfiguration('teensy_serial_port')
+  serial_baudrate = LaunchConfiguration('serial_baudrate')
+  frame_id = LaunchConfiguration('frame_id')
+  inverted = LaunchConfiguration('inverted')
+  angle_compensate = LaunchConfiguration('angle_compensate')
+  scan_mode = LaunchConfiguration('scan_mode')
+
+    # LiDAR Launch
+  lidar_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory('sllidar_ros2'),
+                'launch',
+                'sllidar_a1_launch.py'
+            )
+        ),
+        launch_arguments={
+            'serial_port': lidar_serial_port,
+            'serial_baudrate': serial_baudrate,
+            'frame_id': frame_id,
+            'inverted': inverted,
+            'angle_compensate': angle_compensate,
+            'scan_mode': scan_mode,
+        }.items()
+    )
 
 
 
 
   return LaunchDescription([
-
+        # Declare launch arguments
+        DeclareLaunchArgument('lidar_serial_port', default_value='/dev/ttyUSB_LIDAR'),
+        #DeclareLaunchArgument('teensy_serial_port', default_value='/dev/ttyUSB_TEENSY'),
+        DeclareLaunchArgument('serial_baudrate', default_value='115200'),
+        DeclareLaunchArgument('frame_id', default_value='lidar_link'),
+        DeclareLaunchArgument('inverted', default_value='false'),
+        DeclareLaunchArgument('angle_compensate', default_value='true'),
+        DeclareLaunchArgument('scan_mode', default_value='Sensitivity'),
+        
+        lidar_launch,
 
 
 
@@ -79,8 +124,24 @@ def generate_launch_description():
               cfg_path
           ],
       ),
+      
 
-
+      Node(
+         package='tf2_ros',
+         executable='static_transform_publisher',
+         name='static_laser_tf',
+         arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'laser'],
+         output='screen'
+      ),
+      
+      # Launch RVIZ2
+      Node(
+          package='rviz2',
+          executable='rviz2',
+          name='rviz2',
+          output='screen',
+          arguments=['-d', rviz_config_path]
+      ),
 
 
       # Launch teleop_twist_keyboard with remapping
