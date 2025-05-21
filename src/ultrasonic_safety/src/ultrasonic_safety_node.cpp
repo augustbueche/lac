@@ -83,7 +83,7 @@ private:
   rclcpp::Clock::SharedPtr clock_;
 
   // Constants
-  const double safety_distance_threshold_ = 0.25;  // meters
+  const double safety_distance_threshold_ = 0.3;  // meters
   const double stop_duration_ = 0.3;               // seconds to stop before yielding control
 };
 
