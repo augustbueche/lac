@@ -37,8 +37,7 @@
   <xacro:property name="imu_rpy"    value="0 0 3.14159"/>
   <xacro:property name="lidar_xyz"  value="0 0 ${wheel_radius + 0.55}"/>
   <xacro:property name="lidar_rpy"  value="0 0 0"/>
-  <xacro:property name="camera_xyz" value="0.15 0 ${wheel_radius + 0.5}"/>
-  <xacro:property name="camera_rpy" value="0 0 0"/>
+
 
   <!-- === LINKS === -->
   <link name="base_link">
@@ -93,21 +92,12 @@
       <geometry>
         <cylinder radius="0.05" length="0.03"/>
       </geometry>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 ${wheel_radius + 0.55}" rpy="0 0 0"/>
       <material name="White"/>
     </visual>
   </link>
 
-  <link name="camera_link">
-    <visual>
-      <geometry>
-        <box size="0.05 0.05 0.05"/>
-      </geometry>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <material name="White"/>
-    </visual>
-  </link>
-
+ 
   <!-- === Ultrasonic Sensor Links === -->
 <link name="ultrasonic_a_link">
   <visual>
@@ -167,11 +157,6 @@
     <origin xyz="${lidar_xyz}" rpy="${lidar_rpy}"/>
   </joint>
 
-  <joint name="camera_joint" type="fixed">
-    <parent link="base_link"/>
-    <child  link="camera_link"/>
-    <origin xyz="${camera_xyz}" rpy="${camera_rpy}"/>
-  </joint>
 
   <!-- === Ultrasonic Sensor Joints === -->
   <joint name="ultrasonic_a_joint" type="fixed">

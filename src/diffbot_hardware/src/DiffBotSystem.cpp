@@ -30,9 +30,11 @@ hardware_interface::CallbackReturn DiffBotSystem::on_init(
   port_      = hw_params.at("serial_port");
   baud_rate_ = std::stod(hw_params.at("baud_rate"));
 
-  left_cmd_ = right_cmd_ = 0.0;
-  left_vel_ = right_vel_ = 0.0;
-  left_pos_ = right_pos_ = 0.0;
+  // initialize commands and states
+  left_cmd_   = right_cmd_   = 0.0;
+  left_vel_   = right_vel_   = 0.0;
+  left_pos_   = right_pos_   = 0.0;
+  prev_left_  = prev_right_  = 0.0;
 
   try {
     serial_port_.setPort(port_);
@@ -51,7 +53,6 @@ hardware_interface::CallbackReturn DiffBotSystem::on_init(
   ultra_pub_a_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_a", 10);
   ultra_pub_b_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_b", 10);
   ultra_pub_c_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_c", 10);
-
 
   return CallbackReturn::SUCCESS;
 }
@@ -95,14 +96,27 @@ hardware_interface::return_type DiffBotSystem::read(
         return std::stod(line.substr(pos + key.size()));
       };
 
-      auto l = parse_val("Left Encoder:");
-      auto r = parse_val("Right Encoder:");
+      auto l_opt = parse_val("Left Encoder:");
+      auto r_opt = parse_val("Right Encoder:");
 
-      if (l && r) {
-        left_vel_  = *l;
-        right_vel_ = *r;
-        left_pos_  += left_vel_ * period.seconds();
-        right_pos_ += right_vel_ * period.seconds();
+      if (l_opt && r_opt) {
+        double curr_left  = *l_opt;
+        double curr_right = *r_opt;
+
+        // compute velocity = Δposition / Δtime
+        double dt = period.seconds();
+        if (dt > 0.0) {
+          left_vel_  = (curr_left  - prev_left_)  / dt;
+          right_vel_ = (curr_right - prev_right_) / dt;
+        }
+
+        // report absolute position directly
+        left_pos_  = curr_left;
+        right_pos_ = curr_right;
+
+        // save for next cycle
+        prev_left_  = curr_left;
+        prev_right_ = curr_right;
       }
     }
 
@@ -136,7 +150,6 @@ hardware_interface::return_type DiffBotSystem::read(
     }
   }
 
-
   return return_type::OK;
 }
 
@@ -154,11 +167,12 @@ hardware_interface::return_type DiffBotSystem::write(
   return return_type::OK;
 }
 
-}  
+}  // namespace diffbot_hardware
 
 #include <pluginlib/class_list_macros.hpp>
-
 PLUGINLIB_EXPORT_CLASS(
   diffbot_hardware::DiffBotSystem,
   hardware_interface::SystemInterface
 )
+
+
