@@ -1,7 +1,7 @@
 import os
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch.substitutions import Command, PathJoinSubstitution
@@ -35,22 +35,27 @@ def generate_launch_description():
   scan_mode = LaunchConfiguration('scan_mode')
 
     # LiDAR Launch
-  lidar_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('sllidar_ros2'),
-                'launch',
-                'sllidar_a1_launch.py'
+  lidar_launch = TimerAction(
+        period=5.0,
+        actions=[
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(
+                        get_package_share_directory('sllidar_ros2'),
+                        'launch',
+                        'sllidar_a1_launch.py'
+                    )
+                ),
+                launch_arguments={
+                    'serial_port': lidar_serial_port,
+                    'serial_baudrate': serial_baudrate,
+                    'frame_id': frame_id,
+                    'inverted': inverted,
+                    'angle_compensate': angle_compensate,
+                    'scan_mode': scan_mode,
+                }.items()
             )
-        ),
-        launch_arguments={
-            'serial_port': lidar_serial_port,
-            'serial_baudrate': serial_baudrate,
-            'frame_id': frame_id,
-            'inverted': inverted,
-            'angle_compensate': angle_compensate,
-            'scan_mode': scan_mode,
-        }.items()
+        ]
     )
 
 
@@ -137,6 +142,19 @@ def generate_launch_description():
             
          ]
       ),
+
+      Node(
+          package='nav2_lifecycle_manager',
+          executable='lifecycle_manager',
+          name='lifecycle_manager_slam',
+          output='screen',
+          parameters=[{
+            'use_sim_time': False,
+            'autostart': True,
+            'node_names': ['slam_toolbox'],
+          }]
+    ),
+
 
 
       Node(
