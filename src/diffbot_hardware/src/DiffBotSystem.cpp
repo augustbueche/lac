@@ -105,11 +105,11 @@ hardware_interface::return_type DiffBotSystem::read(
         double curr_right = *r_opt;
 
         // ─── encoder conversion ────────────────────────────────
-        // 64 counts per motor rev; gearbox ratio 30:1 (adjust if yours differs)
-        constexpr double gearbox_ratio  = 102.08;            // your actual gearbox ratio
-        constexpr double counts_per_rev = 64.0 * gearbox_ratio;
+        //  count edges on channel A → 32 CPR; multiply by gearbox ratio
+        constexpr double encoder_cpr    = 32.0;
+        constexpr double gearbox_ratio  = 102.08;       // adjust to your exact gearbox!
+        constexpr double counts_per_rev = encoder_cpr * gearbox_ratio;
         constexpr double rad_per_count  = 2.0 * M_PI / counts_per_rev;
-
 
         double dt = period.seconds();
         if (dt > 0.0) {
@@ -125,6 +125,7 @@ hardware_interface::return_type DiffBotSystem::read(
         prev_left_  = curr_left;
         prev_right_ = curr_right;
         // ────────────────────────────────────────────────────────
+
       }
     }
 
