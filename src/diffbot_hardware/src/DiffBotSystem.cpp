@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <optional>
+#include <cmath>   // <-- for M_PI
 
 namespace diffbot_hardware
 {
@@ -103,20 +104,27 @@ hardware_interface::return_type DiffBotSystem::read(
         double curr_left  = *l_opt;
         double curr_right = *r_opt;
 
-        // compute velocity = Δposition / Δtime
+        // ─── encoder conversion ────────────────────────────────
+        // 64 counts per motor rev; gearbox ratio 30:1 (adjust if yours differs)
+        constexpr double gearbox_ratio  = 102.08;            // your actual gearbox ratio
+        constexpr double counts_per_rev = 64.0 * gearbox_ratio;
+        constexpr double rad_per_count  = 2.0 * M_PI / counts_per_rev;
+
+
         double dt = period.seconds();
         if (dt > 0.0) {
-          left_vel_  = (curr_left  - prev_left_)  / dt;
-          right_vel_ = (curr_right - prev_right_) / dt;
+          double d_left  = (curr_left  - prev_left_)  * rad_per_count;
+          double d_right = (curr_right - prev_right_) * rad_per_count;
+          left_vel_  = d_left  / dt;  // rad/s
+          right_vel_ = d_right / dt;  // rad/s
         }
 
-        // report absolute position directly
-        left_pos_  = curr_left;
-        right_pos_ = curr_right;
+        left_pos_  = curr_left  * rad_per_count;  // rad
+        right_pos_ = curr_right * rad_per_count;  // rad
 
-        // save for next cycle
         prev_left_  = curr_left;
         prev_right_ = curr_right;
+        // ────────────────────────────────────────────────────────
       }
     }
 
@@ -174,5 +182,3 @@ PLUGINLIB_EXPORT_CLASS(
   diffbot_hardware::DiffBotSystem,
   hardware_interface::SystemInterface
 )
-
-

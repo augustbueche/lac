@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>diffbot_hardware</name>
+  <version>0.0.0</version>
+  <description>Teensy↔ros2_control hardware interface for DiffBot</description>
+  <maintainer email="amhun@pdx.edu">lac</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- Build system -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!--Runtime & build dependencies -->
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>sensor_msgs</depend>
+  <depend>serial</depend>
+  <depend>ament_index_cpp</depend>
+
+  <!-- Test dependencies -->
+  <test_depend>ament_cmake_gmock</test_depend>
+  <test_depend>hardware_interface</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <pluginlib plugin="${prefix}/plugins/plugin_description.xml"/>
+  </export>
+</package>
