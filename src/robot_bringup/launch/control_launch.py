@@ -66,7 +66,7 @@ def generate_launch_description():
         DeclareLaunchArgument('lidar_serial_port', default_value='/dev/ttyUSB_LIDAR'),
         #DeclareLaunchArgument('teensy_serial_port', default_value='/dev/ttyUSB_TEENSY'),
         DeclareLaunchArgument('serial_baudrate', default_value='115200'),
-        DeclareLaunchArgument('frame_id', default_value='laser_link'),
+        DeclareLaunchArgument('frame_id', default_value='lidar_link'),
         DeclareLaunchArgument('inverted', default_value='false'),
         DeclareLaunchArgument('angle_compensate', default_value='true'),
         DeclareLaunchArgument('scan_mode', default_value='Sensitivity'),
@@ -157,22 +157,22 @@ def generate_launch_description():
 
 
 
-     Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_laser_tf',
-        arguments=[
-        '--x', '0',
-        '--y', '0',
-        '--z', '0.55',
-        '--roll', '0',
-        '--pitch', '0',
-        '--yaw', '0',
-        '--frame-id', 'base_link',
-        '--child-frame-id', 'laser_link'
-        ],
-        output='screen'
-      ),
+    #  Node(
+    #     package='tf2_ros',
+    #     executable='static_transform_publisher',
+    #     name='static_laser_tf',
+    #     arguments=[
+    #     '--x', '0',
+    #     '--y', '0',
+    #     '--z', '0.55',
+    #     '--roll', '0',
+    #     '--pitch', '0',
+    #     '--yaw', '0',
+    #     '--frame-id', 'base_link',
+    #     '--child-frame-id', 'lidar_link'
+    #     ],
+    #     output='screen'
+    #   ),
 
 
       # Launch RVIZ2

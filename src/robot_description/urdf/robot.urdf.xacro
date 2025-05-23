@@ -35,7 +35,7 @@
   <!-- Sensors -->
   <xacro:property name="imu_xyz"    value="0 0 ${wheel_radius + 0.01}"/>
   <xacro:property name="imu_rpy"    value="0 0 3.14159"/>
-  <xacro:property name="lidar_xyz"  value="0 0 ${wheel_radius + 0.55}"/>
+  <xacro:property name="lidar_xyz"  value="0 0 .55"/>
   <xacro:property name="lidar_rpy"  value="0 0 0"/>
 
 
@@ -92,7 +92,7 @@
       <geometry>
         <cylinder radius="0.05" length="0.03"/>
       </geometry>
-      <origin xyz="0 0 ${wheel_radius + 0.55}" rpy="0 0 0"/>
+      <origin xyz="0 0 0.55" rpy="0 0 0"/>
       <material name="White"/>
     </visual>
   </link>
