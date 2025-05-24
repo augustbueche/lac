@@ -13,6 +13,7 @@
   <depend>teleop_twist_joy</depend>
   <depend>joy</depend>
   <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
   <depend>twist_mux</depend>
   <depend>ultrasonic_safety</depend>
   <depend>nav2_lifecycle_manager</depend>
