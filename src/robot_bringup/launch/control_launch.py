@@ -66,26 +66,12 @@ def generate_launch_description():
         DeclareLaunchArgument('lidar_serial_port', default_value='/dev/ttyUSB_LIDAR'),
         #DeclareLaunchArgument('teensy_serial_port', default_value='/dev/ttyUSB_TEENSY'),
         DeclareLaunchArgument('serial_baudrate', default_value='115200'),
-        DeclareLaunchArgument('frame_id', default_value='lidar_link'),
+        DeclareLaunchArgument('frame_id', default_value='laser_frame'), # AB changed from laser_link to laser_frame to match sllidar_node.cpp
         DeclareLaunchArgument('inverted', default_value='false'),
         DeclareLaunchArgument('angle_compensate', default_value='true'),
         DeclareLaunchArgument('scan_mode', default_value='Sensitivity'),
         
         lidar_launch,
-
-
-
-      # Launch robot state publisher
-      Node(
-          package='robot_state_publisher',
-          executable='robot_state_publisher',
-          name='robot_state_publisher',
-          output='screen',
-          parameters=[{'robot_description': robot_desc}],
-      ),
-
-
-
 
       #Launch control node
       Node(
@@ -98,9 +84,6 @@ def generate_launch_description():
              PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
           ],
        ),
-
-
-
 
       # Spawn joint_state_broadcaster
       Node(
@@ -115,7 +98,14 @@ def generate_launch_description():
           ],
       ),
 
-
+      # Launch robot state publisher
+      Node(
+          package='robot_state_publisher',
+          executable='robot_state_publisher',
+          name='robot_state_publisher',
+          output='screen',
+          parameters=[{'robot_description': robot_desc}],
+      ),
 
 
       # Spawn forward_command_controller
@@ -152,6 +142,7 @@ def generate_launch_description():
             'use_sim_time': False,
             'autostart': True,
             'node_names': ['slam_toolbox'],
+            'bond_timeout': 12.0, # AB changed from 4 to 8 to resolve timeout issue
           }]
     ),
 
@@ -261,13 +252,11 @@ def generate_launch_description():
           output='screen',
           parameters=[
               PathJoinSubstitution([mux_share, 'config', 'twist_mux_topics.yaml']),
-            
               {
               'cmd_vel_timeout': 0.5,
               'cmd_vel_key_timeout': 0.5,
               'cmd_vel_joy_timeout': 0.5,
-              'cmd_vel_mux_timeout': 0.5,
-              #'use_stamped' : True,
+              'cmd_vel_mux_timeout': 0.5
               },
           ],
           remappings=[
