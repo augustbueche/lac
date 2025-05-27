@@ -2,7 +2,8 @@
     "files.associations": {
         "*.tcc": "cpp",
         "sstream": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "chrono": "cpp"
     },
     
     "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
