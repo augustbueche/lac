@@ -19,11 +19,14 @@ forward_command_controller:
   ros__parameters:
     left_wheel_names:   ["wheel_left_joint"]
     right_wheel_names:  ["wheel_right_joint"]
-    wheel_separation:   0.25
-    wheel_radius:       0.0325
+    wheel_separation:   0.294
+    wheel_radius:       0.03329
     cmd_vel_timeout:    0.3
     use_stamped_vel:    true
     enable_odom_tf:     true
     odom_frame_id:      "odom"
     base_frame_id:      "base_link"
-    open_loop:          true
+    open_loop:          false
+    publish_rate:       50.0
+   # publish_odom:        true
+    
