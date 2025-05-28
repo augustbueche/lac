@@ -1,3 +1,4 @@
+# robot_bringup/launch/control_launch.py
 import os
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, TimerAction
@@ -7,20 +8,19 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    # package paths
+    # package shares
     desc_share    = get_package_share_directory('robot_description')
     bringup_share = get_package_share_directory('robot_bringup')
-    teleop_share  = get_package_share_directory('teleop_twist_joy')
     mux_share     = get_package_share_directory('twist_mux')
 
     # file paths
     urdf_path        = PathJoinSubstitution([desc_share, 'urdf', 'robot.urdf.xacro'])
     cfg_path         = PathJoinSubstitution([bringup_share, 'config', 'robot_controllers.yaml'])
     rviz_config_path = PathJoinSubstitution([bringup_share, 'config', 'rvisconfig.rviz'])
-    slam_path        = PathJoinSubstitution([bringup_share, 'config', 'mapper_params_online_async.yaml'])
+    slam_sync_path   = PathJoinSubstitution([bringup_share, 'config', 'mapper_params_online_sync.yaml'])
     robot_desc       = Command(['xacro ', urdf_path])
 
-    # Launch configurations
+    # LiDAR launch args
     lidar_serial_port = LaunchConfiguration('lidar_serial_port')
     serial_baudrate   = LaunchConfiguration('serial_baudrate')
     frame_id          = LaunchConfiguration('frame_id')
@@ -28,7 +28,6 @@ def generate_launch_description():
     angle_compensate  = LaunchConfiguration('angle_compensate')
     scan_mode         = LaunchConfiguration('scan_mode')
 
-    # LiDAR Launch (delayed 5s)
     lidar_launch = TimerAction(
         period=5.0,
         actions=[
@@ -36,24 +35,23 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(
                     os.path.join(
                         get_package_share_directory('sllidar_ros2'),
-                        'launch',
-                        'sllidar_a1_launch.py'
+                        'launch','sllidar_a1_launch.py'
                     )
                 ),
                 launch_arguments={
-                    'serial_port': lidar_serial_port,
-                    'serial_baudrate': serial_baudrate,
-                    'frame_id': frame_id,
-                    'inverted': inverted,
+                    'serial_port':      lidar_serial_port,
+                    'serial_baudrate':  serial_baudrate,
+                    'frame_id':         frame_id,
+                    'inverted':         inverted,
                     'angle_compensate': angle_compensate,
-                    'scan_mode': scan_mode,
+                    'scan_mode':        scan_mode,
                 }.items()
             )
         ]
     )
 
     return LaunchDescription([
-        # Declare launch arguments
+        # declare args for LiDAR
         DeclareLaunchArgument('lidar_serial_port', default_value='/dev/ttyUSB_LIDAR'),
         DeclareLaunchArgument('serial_baudrate',   default_value='115200'),
         DeclareLaunchArgument('frame_id',          default_value='laser_frame'),
@@ -63,7 +61,7 @@ def generate_launch_description():
 
         lidar_launch,
 
-        # ros2_control node
+        # ros2_control
         Node(
             package='controller_manager',
             executable='ros2_control_node',
@@ -71,7 +69,7 @@ def generate_launch_description():
             output='screen',
             parameters=[
                 {'robot_description': robot_desc},
-                cfg_path
+                cfg_path,
             ],
         ),
 
@@ -82,10 +80,7 @@ def generate_launch_description():
             arguments=['joint_state_broadcaster'],
             name='joint_state_broadcaster_spawner',
             output='screen',
-            parameters=[
-                {'robot_description': robot_desc},
-                cfg_path
-            ],
+            parameters=[cfg_path],
         ),
 
         # robot_state_publisher
@@ -94,10 +89,7 @@ def generate_launch_description():
             executable='robot_state_publisher',
             name='robot_state_publisher',
             output='screen',
-            parameters=[
-                {'robot_description': robot_desc},
-                cfg_path
-            ],
+            parameters=[{'robot_description': robot_desc}],
         ),
 
         # forward_command_controller
@@ -107,26 +99,34 @@ def generate_launch_description():
             arguments=['forward_command_controller'],
             name='forward_command_controller_spawner',
             output='screen',
-            parameters=[
-                {'robot_description': robot_desc},
-                cfg_path
-            ],
+            parameters=[cfg_path],
         ),
 
-        # SLAM-Toolbox with map→odom broadcasting enabled
+        # ------------------------------------------------------
+        # SLAM-Toolbox in SYNCHRONOUS mode – one global /map only
+        # ------------------------------------------------------
+        # OLD async version (for reference):
+        # Node(
+        #     package='slam_toolbox',
+        #     executable='async_slam_toolbox_node',
+        #     name='slam_toolbox',
+        #     output='screen',
+        #     parameters=[slam_async_path, {'publish_map_odom_transform': True}, {'use_sim_time': False}],
+        # ),
+        #
         Node(
             package='slam_toolbox',
-            executable='async_slam_toolbox_node',
+            executable='sync_slam_toolbox_node',
             name='slam_toolbox',
             output='screen',
             parameters=[
-                slam_path,
-                {'publish_map_odom_transform': True}
+                slam_sync_path,
+                {'use_sim_time': False}
             ],
-            remappings=[]
+            remappings=[('scan', '/scan')],
         ),
 
-        # Lifecycle manager for SLAM
+        # lifecycle manager for SLAM
         Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
@@ -149,7 +149,7 @@ def generate_launch_description():
             arguments=['-d', rviz_config_path]
         ),
 
-        # teleop_twist_keyboard
+        # teleop & joystick & mux (unchanged)
         Node(
             package='teleop_twist_keyboard',
             executable='teleop_twist_keyboard',
@@ -164,7 +164,6 @@ def generate_launch_description():
             remappings=[('/cmd_vel', '/cmd_vel_key')]
         ),
 
-        # joy node
         Node(
             package='joy',
             executable='joy_node',
@@ -177,7 +176,6 @@ def generate_launch_description():
             }]
         ),
 
-        # teleop_twist_joy
         Node(
             package='teleop_twist_joy',
             executable='teleop_node',
@@ -187,7 +185,6 @@ def generate_launch_description():
             remappings=[('/cmd_vel', '/cmd_vel_joy')]
         ),
 
-        # twist_mux
         Node(
             package='twist_mux',
             executable='twist_mux',
@@ -196,10 +193,10 @@ def generate_launch_description():
             parameters=[
                 PathJoinSubstitution([mux_share, 'config', 'twist_mux_topics.yaml']),
                 {
-                    'cmd_vel_timeout': 0.5,
-                    'cmd_vel_key_timeout': 0.5,
-                    'cmd_vel_joy_timeout': 0.5,
-                    'cmd_vel_mux_timeout': 0.5
+                    'cmd_vel_timeout':       0.5,
+                    'cmd_vel_key_timeout':   0.5,
+                    'cmd_vel_joy_timeout':   0.5,
+                    'cmd_vel_mux_timeout':   0.5,
                 },
             ],
             remappings=[('/cmd_vel_out', '/forward_command_controller/cmd_vel')]
