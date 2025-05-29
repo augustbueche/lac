@@ -30,7 +30,7 @@ def generate_launch_description():
 
     # LiDAR Launch (delayed 5s)
     lidar_launch = TimerAction(
-        period=5.0,
+        period=0.1,
         actions=[
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
