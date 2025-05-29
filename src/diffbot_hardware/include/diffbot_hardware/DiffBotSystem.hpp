@@ -46,7 +46,7 @@ private:
   double left_cmd_{0.0}, right_cmd_{0.0};
   double left_pos_{0.0}, right_pos_{0.0};
   double prev_left_{0.0}, prev_right_{0.0};
-  double wheel_radius_{0.0325};  // meters, from your Xacro
+  double wheel_radius_{0.03329};  // meters, from your Xacro
 
   // ROS pulishers for ultrasonic sensors
   rclcpp::Node::SharedPtr sensor_node_;
