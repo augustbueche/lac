@@ -1,35 +1,28 @@
-# robot_bringup/config/mapper_params_online_sync.yaml
-#
-# Fully synchronous SLAM toolbox parameters.
-# No submap merging, one global /map, and
-# strong odom‐vs‐scan weighting to kill runaway drift.
-
 slam_toolbox:
   ros__parameters:
-    # frames & topics
-    odom_frame: odom
+    #–– Basic frames and topics ––
+    mode: mapping
     map_frame: map
+    odom_frame: odom
     base_frame: base_link
     scan_topic: /scan
 
-    # always publish map→odom for downstream (nav2, etc)
+    #–– Publish the global map on /map every 0.5 s ––
     publish_map_odom_transform: true
-
-    # mapping mode (not localization)
-    mode: mapping
-
-    # solver weights: trust your wheel encoders (odom) more,
-    # scan matcher only gently corrects residual drift
-    odom_translational_weight: 2.0
-    odom_rotational_weight:    2.0
-    map_translational_weight:  0.3
-    map_rotational_weight:     0.3
-
-    # how often to publish the map→odom transform
     transform_publish_period: 0.02
+    publish_period_sec: 0.5
 
-    # keep map_saver on if you rely on it
+    #–– Keep FIFO queues big enough to avoid drops ––
+    scan_queue_size: 20
+    transform_queue_size: 20
+    transform_tolerance: 0.1
+
+    #–– Lifecycle / map‐saving support (optional) ––
+    use_lifecycle_manager: true
     use_map_saver: true
 
-    # lifecycle manager can remain enabled if you like
-    use_lifecycle_manager: true
+    map_start_pose: [0.0, 0.0, 0.0]   # [x, y, yaw] in the map frame :contentReference[oaicite:0]{index=0}
+
+    # optional: give it a little longer to find your TFs
+    transform_timeout: 0.2
+    tf_buffer_duration: 10.0
