@@ -106,8 +106,8 @@ hardware_interface::return_type DiffBotSystem::read(
 
         // ─── encoder conversion ────────────────────────────────
         //  count edges on channel A → 32 CPR; multiply by gearbox ratio
-        constexpr double encoder_cpr    = 32.0;
-        constexpr double gearbox_ratio  = 102.08;       // adjust to your exact gearbox!
+        constexpr double encoder_cpr    = 64.0;
+        constexpr double gearbox_ratio  = 63.5;       // adjust to your exact gearbox!
         constexpr double counts_per_rev = encoder_cpr * gearbox_ratio;
         constexpr double rad_per_count  = 2.0 * M_PI / counts_per_rev;
 

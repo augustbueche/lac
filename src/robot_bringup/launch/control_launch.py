@@ -59,7 +59,7 @@ def generate_launch_description():
         DeclareLaunchArgument('frame_id',          default_value='laser_frame'),
         DeclareLaunchArgument('inverted',          default_value='false'),
         DeclareLaunchArgument('angle_compensate',  default_value='true'),
-        DeclareLaunchArgument('scan_mode',         default_value='Sensitivity'),
+        DeclareLaunchArgument('scan_mode',         default_value='Standard'),
 
         lidar_launch,
 
@@ -95,8 +95,8 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='screen',
             parameters=[
-                {'robot_description': robot_desc},
-                cfg_path
+                {'robot_description': robot_desc}
+        
             ],
         ),
 
