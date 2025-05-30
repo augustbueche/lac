@@ -30,7 +30,7 @@ def generate_launch_description():
 
     # LiDAR Launch (delayed 5s)
     lidar_launch = TimerAction(
-        period=5.0,
+        period=1.0,
         actions=[
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -57,7 +57,7 @@ def generate_launch_description():
         DeclareLaunchArgument('lidar_serial_port', default_value='/dev/ttyUSB_LIDAR'),
         DeclareLaunchArgument('serial_baudrate',   default_value='115200'),
         DeclareLaunchArgument('frame_id',          default_value='laser_frame'),
-        DeclareLaunchArgument('inverted',          default_value='false'),
+        DeclareLaunchArgument('inverted',          default_value='true'),
         DeclareLaunchArgument('angle_compensate',  default_value='true'),
         DeclareLaunchArgument('scan_mode',         default_value='Standard'),
 
