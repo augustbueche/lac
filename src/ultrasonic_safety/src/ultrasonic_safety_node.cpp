@@ -29,16 +29,29 @@ public:
 
 private:
   void ultrasonicCallbackA(const sensor_msgs::msg::Range::SharedPtr msg) {
-    obstacle_a_detected_ = msg->range < safety_distance_threshold_;
+    if (msg->range <= 0.0) {
+      obstacle_a_detected_ = false;
+      return;
+    } 
+    obstacle_a_detected_ = (msg->range < safety_distance_threshold_);
   }
 
   void ultrasonicCallbackB(const sensor_msgs::msg::Range::SharedPtr msg) {
-    obstacle_b_detected_ = msg->range < safety_distance_threshold_;
+    if (msg->range <= 0.0) {
+      obstacle_b_detected_ = false;
+      return;
+    } 
+    obstacle_b_detected_ = (msg->range < safety_distance_threshold_);
   }
 
   void ultrasonicCallbackC(const sensor_msgs::msg::Range::SharedPtr msg) {
-    obstacle_c_detected_ = msg->range < safety_distance_threshold_;
+    if (msg->range <= 0.0) {
+      obstacle_c_detected_ = false;
+      return;
+    } 
+    obstacle_c_detected_ = (msg->range < safety_distance_threshold_);
   }
+    
 
   void publishSafetyCommand() {
     geometry_msgs::msg::TwistStamped cmd_vel;
