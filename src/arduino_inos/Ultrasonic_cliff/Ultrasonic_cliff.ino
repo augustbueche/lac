@@ -1,14 +1,14 @@
 // === Motor Driver Pins (DBH-12V) ===
-const int leftMotorIn1  = 3;  // PWM pin for CW
-const int leftMotorIn2  = 2;  // PWM pin for CCW
-const int rightMotorIn1 = 5;  // PWM pin for CW
-const int rightMotorIn2 = 4;  // PWM pin for CCW
+const int leftMotorIn1  = 4;  // PWM pin for CW //3
+const int leftMotorIn2  = 5;  // PWM pin for CCW //2
+const int rightMotorIn1 = 2;  // PWM pin for CW  //5
+const int rightMotorIn2 = 3;  // PWM pin for CCW  //4
 
 // === Encoder Pins ===
-const int leftEncoderPinA  = 13; //Attempted lidar spin fix revert to these pins if issues persist: 12
-const int leftEncoderPinB  = 14;                                                                    //7
-const int rightEncoderPinA = 7;                                                                     //13
-const int rightEncoderPinB = 12;                                                                   //14
+const int leftEncoderPinA  = 12; //12; //Attempted lidar spin fix revert to these pins if issues persist: 12
+const int leftEncoderPinB  = 7; //7;                                                                    //7
+const int rightEncoderPinA = 13; //13;                                                                     //13
+const int rightEncoderPinB = 14; //14;                                                                   //14
  
 volatile long left_ticks  = 0;
 volatile long right_ticks = 0;
