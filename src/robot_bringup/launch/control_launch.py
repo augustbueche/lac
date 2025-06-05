@@ -27,6 +27,8 @@ def generate_launch_description():
     inverted          = LaunchConfiguration('inverted')
     angle_compensate  = LaunchConfiguration('angle_compensate')
     scan_mode         = LaunchConfiguration('scan_mode')
+    angle_min        = LaunchConfiguration('angle_min')
+    angle_max        = LaunchConfiguration('angle_max')
 
     # LiDAR Launch (delayed 5s)
     lidar_launch = TimerAction(
@@ -47,6 +49,8 @@ def generate_launch_description():
                     'inverted': inverted,
                     'angle_compensate': angle_compensate,
                     'scan_mode': scan_mode,
+                    'angle_min': angle_min,
+                    'angle_max': angle_max
                 }.items()
             )
         ]
@@ -57,9 +61,11 @@ def generate_launch_description():
         DeclareLaunchArgument('lidar_serial_port', default_value='/dev/ttyUSB_LIDAR'),
         DeclareLaunchArgument('serial_baudrate',   default_value='115200'),
         DeclareLaunchArgument('frame_id',          default_value='laser_frame'),
-        DeclareLaunchArgument('inverted',          default_value='true'),
+        DeclareLaunchArgument('inverted',          default_value='false'),
         DeclareLaunchArgument('angle_compensate',  default_value='true'),
         DeclareLaunchArgument('scan_mode',         default_value='Standard'),
+        DeclareLaunchArgument('angle_min',         default_value='-360'),  # -pi
+        DeclareLaunchArgument('angle_max',         default_value='360'),  # 2 * pi
 
         lidar_launch,
 
@@ -199,9 +205,36 @@ def generate_launch_description():
                     'cmd_vel_timeout': 0.5,
                     'cmd_vel_key_timeout': 0.5,
                     'cmd_vel_joy_timeout': 0.5,
-                    'cmd_vel_mux_timeout': 0.5
+                    'cmd_vel_mux_timeout': 0.5,
+                    'cmd_vel_ultra_timeout': 0.5,
+                    'cmd_vel_cliff_timeout': 0.5,
                 },
             ],
             remappings=[('/cmd_vel_out', '/forward_command_controller/cmd_vel')]
         ),
+
+        # Ultrasonic sensor node
+         Node(
+            package='ultrasonic_safety',
+            executable='ultrasonic_safety_node',
+            name='ultrasonic_safety_node',
+            output='screen',
+            parameters=[{
+                #'scale_linear': 0.3,
+                #'scale_angular': 1.0,
+                'stamped': True,
+            }],
+            remappings=[
+                ('/cmd_vel', '/cmd_vel_ultra')
+            ]
+      ),
+
+        Node(
+            package='cliff_safety',
+            executable='cliff_safety_node',
+            name='cliff_safety_node',
+            output='screen',
+            parameters=[],
+            remappings=[('cmd_vel', '/cmd_vel_cliff')]  # or just 'cmd_vel' if you prefer
+        ),  
     ])

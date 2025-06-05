@@ -27,4 +27,9 @@ twist_mux:
       ultrasonic:
         topic   : cmd_vel_ultra
         timeout : 0.5
-        priority: 100
+        priority: 99
+      
+      cliff:
+        topic   : cmd_vel_cliff
+        timeout : 0.5
+        priority: 100 

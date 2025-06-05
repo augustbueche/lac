@@ -6,7 +6,11 @@
                 "${workspaceFolder}/**",
                 "/opt/ros/jazzy/include",
                 "/home/workspace/lac/install/**/include",
-                "/opt/ros/jazzy/include/controller_interface/**/include"
+                "/opt/ros/jazzy/include/controller_interface/**/include",
+                "/opt/ros/jazzy/include/geometry_msgs",
+                "/opt/ros/jazzy/include/sensor_msgs",
+                "/opt/ros/jazzy/include/rosidl_runtime_cpp",
+                "/opt/ros/jazzy/include/rosidl_runtime_c"
             ],
             "defines": [
                 "\"RCUTILS_ENABLE_FAULT_INJECTION\""

@@ -54,6 +54,8 @@ hardware_interface::CallbackReturn DiffBotSystem::on_init(
   ultra_pub_a_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_a", 10);
   ultra_pub_b_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_b", 10);
   ultra_pub_c_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_c", 10);
+  ultra_pub_r_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_r", 10);
+  ultra_pub_l_ = sensor_node_->create_publisher<sensor_msgs::msg::Range>("ultrasonic_l", 10);
 
   return CallbackReturn::SUCCESS;
 }
@@ -113,13 +115,13 @@ hardware_interface::return_type DiffBotSystem::read(
 
         double dt = period.seconds();
         if (dt > 0.0) {
-          double d_left  = (curr_left  - prev_left_)  * rad_per_count;
+          double d_left  = (-curr_left  + prev_left_)  * rad_per_count;
           double d_right = (curr_right - prev_right_) * rad_per_count;
           left_vel_  = d_left  / dt;  // rad/s
           right_vel_ = d_right / dt;  // rad/s
         }
 
-        left_pos_  = curr_left  * rad_per_count;  // rad
+        left_pos_  = -curr_left  * rad_per_count;  // rad
         right_pos_ = curr_right * rad_per_count;  // rad
 
         prev_left_  = curr_left;
@@ -139,6 +141,8 @@ hardware_interface::return_type DiffBotSystem::read(
       auto a = parse_val("UltraA:");
       auto b = parse_val("UltraB:");
       auto c = parse_val("UltraC:");
+      auto r = parse_val("UltraR:");
+      auto l = parse_val("UltraL:");
 
       auto publish_range = [&](std::optional<double> dist_cm, auto pub, const std::string & frame_id) {
         if (!dist_cm) return;
@@ -156,6 +160,8 @@ hardware_interface::return_type DiffBotSystem::read(
       publish_range(a, ultra_pub_a_, "ultrasonic_a_link");
       publish_range(b, ultra_pub_b_, "ultrasonic_b_link");
       publish_range(c, ultra_pub_c_, "ultrasonic_c_link");
+      publish_range(r, ultra_pub_r_, "cliff_r_link");
+      publish_range(l, ultra_pub_l_, "cliff_l_link");  
     }
   }
 

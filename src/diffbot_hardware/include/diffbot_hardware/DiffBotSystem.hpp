@@ -53,11 +53,15 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_a_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_b_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_c_;
+  rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_r_;
+  rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr ultra_pub_l_;
 
   // Cached distance readings (this is storing the ultrasonic sensor readings)
   double ultra_a_{-1.0};
   double ultra_b_{-1.0};
   double ultra_c_{-1.0};
+  double ultra_r_{-1.0};
+  double ultra_l_{-1.0};
 };
 
 }  // namespace diffbot_hardware
