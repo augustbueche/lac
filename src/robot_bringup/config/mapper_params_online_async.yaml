@@ -23,12 +23,12 @@ slam_toolbox:
     use_lifecycle_manager:  true
     transform_publish_period: 0.02
     throttle_scans: 1                     # process every scan
-    scan_queue_size:      1    # default 1
+    scan_queue_size:      100    # default 1 (1 before)
     transform_queue_size: 1   # default 1
     scan_buffer_size: 10                 # internal SLAM buffer
     scan_buffer_maximum_scan_distance: 10.0
-    tf_buffer_duration: 30.0             # how long to keep past TFs in the buffer
-    transform_timeout: 0.2               # how long to wait (seconds) for the needed TF
+    tf_buffer_duration: 10.0             # how long to keep past TFs in the buffer (was 30 before)
+    transform_timeout: 1.0               # how long to wait (seconds) for the needed TF (0.2 before)
 
     
 

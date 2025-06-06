@@ -1,7 +1,7 @@
 controller_manager:
   ros__parameters:
     # controller_manager settings
-    update_rate: 50
+    update_rate: 100
     autostart: true
 
     # controller types
@@ -21,7 +21,7 @@ forward_command_controller:
     wheel_radius:       0.03329
     cmd_vel_timeout:    0.3
     use_stamped_vel:    true
-    publish_rate:       60.0
+    publish_rate:       50.0
     # (the rest of your diff_drive defaults will be pulled from the
     #  diff_drive_controller_parameter.yaml, so you only need to override
     #  the things you really care about here)
