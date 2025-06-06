@@ -1,6 +1,6 @@
 // === Motor Driver Pins (DBH-12V) ===
 const int leftMotorIn1  = 3;  // PWM pin for CW //3
-const int leftMotorIn2  = 2;  // PWM pin for CCW //2
+const int leftMotorIn2  = 2; //2  // PWM pin for CCW //2
 const int rightMotorIn1 = 4;  // PWM pin for CW  //5
 const int rightMotorIn2 = 5;  // PWM pin for CCW  //4
 

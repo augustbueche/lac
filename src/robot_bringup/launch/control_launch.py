@@ -63,7 +63,7 @@ def generate_launch_description():
         DeclareLaunchArgument('frame_id',          default_value='laser_frame'),
         DeclareLaunchArgument('inverted',          default_value='false'),
         DeclareLaunchArgument('angle_compensate',  default_value='true'),
-        DeclareLaunchArgument('scan_mode',         default_value='Standard'),
+        DeclareLaunchArgument('scan_mode',         default_value='Sensitivity'),
         DeclareLaunchArgument('angle_min',         default_value='-360'),  # -pi
         DeclareLaunchArgument('angle_max',         default_value='360'),  # 2 * pi
 
