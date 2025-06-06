@@ -59,7 +59,7 @@ def generate_launch_description():
         DeclareLaunchArgument('frame_id',          default_value='laser_frame'),
         DeclareLaunchArgument('inverted',          default_value='true'),
         DeclareLaunchArgument('angle_compensate',  default_value='true'),
-        DeclareLaunchArgument('scan_mode',         default_value='Standard'),
+        DeclareLaunchArgument('scan_mode',         default_value='Sensitivity'),
 
         lidar_launch,
 
